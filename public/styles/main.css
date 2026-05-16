@@ -1,6 +1,19 @@
-/* ====================================================================== */
-/* ======================== GLOBALNE / RESET ============================ */
-/* ====================================================================== */
+/* ======================================================================
+   SPIS TREŚCI:
+   ======================================================================
+   [1] SYSTEM PROJEKTOWY (Zmienne, Resety, Baza strony)
+   [2] UKŁAD GLOBALNY (Header, Sidebar)
+   [3] STRONA: TRENING (Choose Your Mission - Gryf kart)
+   [4] STRONA: HANGAR (Lista statków kosmicznych)
+   [5] ELEMENTY UNIWERSALNE (Przyciski, Odznaki/Badges)
+   ====================================================================== */
+
+
+/* #region [1] SYSTEM PROJEKTOWY (Zmienne, Resety, Baza strony, GŁÓWNY OBSZAR ROBOCZY) */
+/* ======================================================================
+   [1] DESIGN SYSTEM & VARIABLES
+   ====================================================================== */
+
 * {
     margin: 0;
     padding: 0;
@@ -37,7 +50,9 @@ main {
 .layout {
     display: flex;
 }
+/* #endregion */
 
+/* #region [2] UKŁAD GLOBALNY (Header, Sidebar) */
 /* ====================================================================== */
 /* =============================== SIDEBAR ============================== */
 /* ====================================================================== */
@@ -63,21 +78,49 @@ main {
 }
 
 .sidebar li {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-size: 21px;
     margin-left: 15px; /* Delikatnie zmniejszony dla lepszego dopasowania */
+    padding: 14px 20px 14px 0px;
 }
 
 .logout {
     margin-top: auto; /* Wypycha element na sam dół listy */
 }
 
+
+/* --- STYL DLA AKTYWNEGO LINKU W SIDEBARZE --- */
+
+/* Przycisk staje się jaśniejszy, a ikona/tekst dostają kolor głównego błękitu */
+.sidebar li.active a {
+    color: #38bdf8 !important; /* Twój kosmiczny błękit */
+    font-weight: 600;
+}
+
+/* Dodajemy mały neonowy pasek po lewej stronie aktywnego elementu */
+.sidebar li.active {
+    position: relative;
+    background-color: rgba(56, 189, 248, 0.05); /* Bardzo delikatne tło podświetlenia */
+    border-radius: 8px;
+    padding: 14px 20px 14px 25px;
+    margin-left: 0 !important; /* Resetujemy margines dla tła... */
+    border-left: 3px solid #38bdf8; /* Neonowa kreska z lewej strony */
+    box-shadow: inset 5px 0 15px rgba(56, 189, 248, 0.05);
+}
+
+/* Opcjonalnie: efekt delikatnego świecenia ikony w aktywnym linku */
+.sidebar li.active a i {
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+}
+
+/* Dodaj płynne przejście do domyślnego stylu linku (znajdź tę regułę w swoim CSS i dodaj transition) */
 .sidebar a {
     display: flex;
     align-items: center;
     gap: 16px;
     color: #46465B;
     text-decoration: none;
+    transition: color 0.2s ease; /* Płynna zmiana koloru przy najechaniu/aktywacji */
 }
 
 /* ====================================================================== */
@@ -138,7 +181,9 @@ main {
     color: #ffffff;
     font-weight: bold;
 }
+/* #endregion */
 
+/* #region [3] STRONA: TRENING */
 /* ====================================================================== */
 /* ==================== UKŁAD STRONY Z TRAINING           =============== */
 /* ====================================================================== */
@@ -421,8 +466,9 @@ main {
     box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
     border-color: rgba(234, 179, 8, 0.8);
 }
+/* #endregion */
 
-
+/* #region [3] STRONA: PROFIL */
 /* ====================================================================== */
 /* ========================== SEKCJA PROFILU ============================ */
 /* ====================================================================== */
