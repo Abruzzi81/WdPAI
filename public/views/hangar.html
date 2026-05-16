@@ -1,15 +1,138 @@
-<!DOCTYPE html>
-<html lang="pl">
+<!doctype html>
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title><?= $title; ?></title>
-    <link rel="stylesheet" href="public/css/style.css"> <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>
+        <?= $title; ?>
+    </title>
 </head>
+
 <body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
 
-    <header class="galactic-header">
-        <h1>Hangar</h1>
-    </header>
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+        <main>
+            <div class="page-layout">
+                <div class="hangar-container">
 
+                    <section class="hangar-preview-section">
+                        <div class="astronaut-preview-card">
+                            <div class="preview-window">
+                                <i class="fa-solid fa-user-astronaut astronaut-character"></i>
+
+                                <div class="equipped-indicator slot--helmet" title="Wyposażony Hełm">
+                                    <i class="fa-solid fa-head-side-goggle"></i>
+                                </div>
+                                <div class="equipped-indicator slot--suit" title="Wyposażony Kombinezon">
+                                    <i class="fa-solid fa-shirt"></i>
+                                </div>
+                                <div class="equipped-indicator slot--gloves" title="Wyposażone Rękawice">
+                                    <i class="fa-solid fa-hands"></i>
+                                </div>
+                                <div class="equipped-indicator slot--boots" title="Wyposażone Buty">
+                                    <i class="fa-solid fa-shoe-prints"></i>
+                                </div>
+                            </div>
+                            <div class="preview-footer">
+                                <span class="current-skin-name">Default Recruit Suit</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="hangar-shop-section">
+
+                        <div class="skin-category">
+                            <h3 class="category-title"><i class="fa-solid fa-helmet-safety"></i> Hełmy</h3>
+                            <div class="skins-grid">
+                                <div class="skin-item item--active border-medium">
+                                    <div class="skin-icon"><i class="fa-solid fa-head-side-goggle"></i></div>
+                                    <span class="skin-name">Recruit Helm</span>
+                                    <span class="skin-price">Equipped</span>
+                                </div>
+                                <div class="skin-item border-easy">
+                                    <div class="skin-icon"><i class="fa-solid fa-mask-ventilator"></i></div>
+                                    <span class="skin-name">Bio-Hazard</span>
+                                    <span class="skin-price">✨ 250</span>
+                                </div>
+                                <div class="skin-item border-hard">
+                                    <div class="skin-icon"><i class="fa-solid fa-brain"></i></div>
+                                    <span class="skin-name">Cerebral X</span>
+                                    <span class="skin-price">✨ 750</span>
+                                </div>
+                                <div class="skin-item border-eclipse">
+                                    <div class="skin-icon"><i class="fa-solid fa-crown"></i></div>
+                                    <span class="skin-name">Nova King</span>
+                                    <span class="skin-price">✨ 2,500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="skin-category">
+                            <h3 class="category-title"><i class="fa-solid fa-shirt text-hard"></i> Kostiumy</h3>
+                            <div class="skins-grid">
+                                <div class="skin-item item--active border-medium">
+                                    <div class="skin-icon"><i class="fa-solid fa-shirt"></i></div>
+                                    <span class="skin-name">Base Mesh</span>
+                                    <span class="skin-price">Equipped</span>
+                                </div>
+                                <div class="skin-item border-easy">
+                                    <div class="skin-icon"><i class="fa-solid fa-vest"></i></div>
+                                    <span class="skin-name">Scout Vest</span>
+                                    <span class="skin-price">✨ 500</span>
+                                </div>
+                                <div class="skin-item border-eclipse">
+                                    <div class="skin-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                                    <span class="skin-name">Quantum Plating</span>
+                                    <span class="skin-price">✨ 5,000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="skin-category">
+                            <h3 class="category-title"><i class="fa-solid fa-hands text-easy"></i> Rękawiczki</h3>
+                            <div class="skins-grid">
+                                <div class="skin-item item--active border-medium">
+                                    <div class="skin-icon"><i class="fa-solid fa-hands"></i></div>
+                                    <span class="skin-name">Cotton Pads</span>
+                                    <span class="skin-price">Equipped</span>
+                                </div>
+                                <div class="skin-item border-hard">
+                                    <div class="skin-icon"><i class="fa-solid fa-hand-fist"></i></div>
+                                    <span class="skin-name">Thermal Grip</span>
+                                    <span class="skin-price">✨ 400</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="skin-category">
+                            <h3 class="category-title"><i class="fa-solid fa-shoe-prints text-eclipse"></i> Buty</h3>
+                            <div class="skins-grid">
+                                <div class="skin-item item--active border-medium">
+                                    <div class="skin-icon"><i class="fa-solid fa-shoe-prints"></i></div>
+                                    <span class="skin-name">Mag-Boots v1</span>
+                                    <span class="skin-price">Equipped</span>
+                                </div>
+                                <div class="skin-item border-easy">
+                                    <div class="skin-icon"><i class="fa-solid fa-socks"></i></div>
+                                    <span class="skin-name">Gravity Defiers</span>
+                                    <span class="skin-price">✨ 800</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Akademia Matematyczna. Wszystkie prawa zastrzeżone.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
 </body>
+
 </html>

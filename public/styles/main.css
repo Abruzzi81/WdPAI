@@ -667,6 +667,231 @@ main {
 
 
 
+/* ====================================================================== */
+/* ========================== SEKCJA HANGARU ============================ */
+/* ====================================================================== */
+
+/* Kontener główny dzielący stronę na dwie części */
+.hangar-container {
+    display: block;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 0;
+    
+    /* Obliczamy maksymalną wysokość: 100% ekranu minus wysokość headera i paddingi */
+    height: calc(100vh - 180px); 
+}
+
+/* --- LEWA KOLUMNA: PODGLĄD POSTACI --- */
+.hangar-preview-section {
+    display: block;
+    float: left;
+    width: 38%;
+    padding-right: 20px;
+    
+    /* Blokujemy tę sekcję, żeby nie reagowała na przewijanie */
+    position: sticky;
+    top: 0;
+}
+
+.astronaut-preview-card {
+    background-color: rgba(14, 16, 41, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.preview-window {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    height: 400px;
+    position: relative;
+    display: block;
+}
+
+/* Główny model kosmonauty */
+.astronaut-character {
+    font-size: 10rem;
+    color: #f1f5f9;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
+}
+
+/* Wskaźniki slotów ekwipunku wokół postaci */
+.equipped-indicator {
+    position: absolute;
+    width: 44px;
+    height: 44px;
+    background-color: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 10px;
+    color: #38bdf8;
+    display: block;
+    line-height: 42px;
+    text-align: center;
+    font-size: 1.1rem;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.slot--helmet { top: 30px; left: 30px; }
+.slot--suit   { top: 110px; left: 30px; }
+.slot--gloves { top: 190px; left: 30px; }
+.slot--boots  { top: 270px; left: 30px; }
+
+.preview-footer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.current-skin-name {
+    color: #38bdf8;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- PRAWA KOLUMNA: WYBÓR SKÓREK --- */
+.hangar-shop-section {
+    display: block;
+    float: right;
+    width: 62%;
+    
+    /* Włączamy przewijanie w pionie */
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 10px; /* Miejsce na pasek przewijania (scrollbar) */
+}
+
+.hangar-shop-section::-webkit-scrollbar {
+    width: 6px;
+}
+.hangar-shop-section::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.01);
+    border-radius: 10px;
+}
+.hangar-shop-section::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.2); /* Błękitny, półprzezroczysty pasek */
+    border-radius: 10px;
+}
+.hangar-shop-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(56, 189, 248, 0.5);
+}
+
+.skin-category {
+    background-color: rgba(14, 16, 41, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.category-title {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.category-title i {
+    margin-right: 8px;
+}
+
+/* Siatka przedmiotów wewnątrz kategorii */
+.skins-grid {
+    display: block;
+    width: 100%;
+}
+
+/* Pojedynczy przedmiot w sklepie/hangarze */
+.skin-item {
+    display: block;
+    float: left;
+    width: calc(25% - 12px);
+    margin-right: 16px;
+    margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.01);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.skins-grid :last-child {
+    margin-right: 0;
+}
+
+.skin-item:hover {
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Mały boks z ikoną przedmiotu (analogiczny do Twoich ramek z ikonami) */
+.skin-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 10px auto;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    line-height: 48px;
+    font-size: 1.3rem;
+    color: #94a3b8;
+}
+
+.skin-name {
+    display: block;
+    font-size: 0.85rem;
+    color: #f1f5f9;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.skin-price {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 6px;
+    font-weight: 600;
+}
+
+/* Wygląd aktywnego / wyposażonego przedmiotu */
+.item--active {
+    background-color: rgba(56, 189, 248, 0.05);
+}
+.item--active .skin-icon {
+    background-color: rgba(56, 189, 248, 0.1);
+    border-color: rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+}
+.item--active .skin-price {
+    color: #38bdf8;
+}
+
+/* Czyszczenie floatów */
+.hangar-container::after,
+.skins-grid::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+
+
 
 /* ====================================================================== */
 /* ========================== RESPONSYWNOŚĆ ============================= */
