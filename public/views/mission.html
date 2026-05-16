@@ -1,15 +1,95 @@
-<!DOCTYPE html>
-<html lang="pl">
+<!doctype html>
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title><?= $title; ?></title>
-    <link rel="stylesheet" href="public/css/style.css"> <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>
+        <?= $title; ?>
+    </title>
 </head>
+
 <body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
 
-    <header class="galactic-header">
-        <h1>Mission</h1>
-    </header>
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+        <main>
+            <div class="page-layout">
 
+                <header class="mission-header">
+                    <h1 class="mission-title">Misja Główna: Kosmiczna podróż</h1>
+                    <p class="mission-description">
+                        Podróżuj przez kolejne sektory galaktyki, rozwiązując zaawansowane anomalie matematyczne.
+                    </p>
+                </header>
+
+                <section class="page-main-content">
+                    <div class="space-map-timeline">
+
+                        <div class="map-stage stage--completed">
+                            <div class="map-node">
+                                <div class="node-planet"><i class="fa-solid fa-earth-europe"></i></div>
+                            </div>
+                            <div class="map-card">
+                                <span class="stage-status-badge">Ukończono</span>
+                                <h3 class="stage-title">Sektor 1: Alfa Centauri</h3>
+                                <p class="stage-desc">Nawiąż połączenie z uszkodzoną sondą badawczą.</p>
+                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 150</span></div>
+                                <button class="btn-stage btn--completed" disabled>Rozwiązane</button>
+                            </div>
+                        </div>
+
+                        <div class="map-stage stage--active">
+                            <div class="map-node">
+                                <div class="node-planet"><i class="fa-solid fa-meteor"></i></div>
+                            </div>
+                            <div class="map-card">
+                                <span class="stage-status-badge">Aktualna Misja</span>
+                                <h3 class="stage-title">Sektor 2: Pas Asteroid</h3>
+                                <p class="stage-desc">Silnik traci stabilność. Rozwiąż zadania matematyczne.</p>
+                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 350</span></div>
+                                <button class="btn-stage btn--active">Rozpocznij <i
+                                        class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="map-stage stage--locked">
+                            <div class="map-node">
+                                <div class="node-planet"><i class="fa-solid fa-shuttle-space"></i></div>
+                            </div>
+                            <div class="map-card">
+                                <span class="stage-status-badge">Zablokowane</span>
+                                <h3 class="stage-title">Sektor 3: Pierścienie Saturna</h3>
+                                <p class="stage-desc">Oblicz bezpieczną trajektorię przelotu przez lodowe odłamki.</p>
+                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 500</span></div>
+                                <button class="btn-stage btn--locked" disabled>Zablokowane</button>
+                            </div>
+                        </div>
+
+                        <div class="map-stage stage--locked">
+                            <div class="map-node">
+                                <div class="node-planet"><i class="fa-solid fa-circle-dot"></i></div>
+                            </div>
+                            <div class="map-card">
+                                <span class="stage-status-badge">Zablokowane</span>
+                                <h3 class="stage-title">Sektor 4: Horyzont Zdarzeń</h3>
+                                <p class="stage-desc">Ostateczne starcie z anomaliami grawitacyjnymi wokół czarnej
+                                    dziury.</p>
+                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 1,000</span></div>
+                                <button class="btn-stage btn--locked" disabled>Zablokowane</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Akademia Matematyczna. Wszystkie prawa zastrzeżone.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
 </body>
+
 </html>
