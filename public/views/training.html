@@ -1,15 +1,111 @@
-<!DOCTYPE html>
-<html lang="pl">
+<!doctype html>
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title><?= $title; ?></title>
-    <link rel="stylesheet" href="public/css/style.css"> <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>
+        <?= $title; ?>
+    </title>
 </head>
+
 <body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
 
-    <header class="galactic-header">
-        <h1>Training</h1>
-    </header>
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
 
+        <main>
+            <div class="page-layout">
+
+                <header class="training-header">
+
+                    <h1 class="training-title">Wybierz Misję</h1>
+
+                    <p class="training-description">
+                        Wybierz poziom trudności dla swojej eksploracji matematycznej. Każdy poziom trudności zapewnia
+                        większe
+                        nagrody w postaci Gwiezdnego Pyłu.
+                    </p>
+                </header>
+
+                <section class="page-main-content">
+                    <div class="trainings-grid">
+
+                        <div class="training-card card--easy">
+                            <div class="training-card__icon">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div class="training-card__content">
+                                <h3 class="training-card__title">ŁATWY</h3>
+                                <div>
+                                    <p class="training-card__description">
+                                        Lot o niskiej grawitacji. Idealny dla nowych kadetów opanowujących podstawy.
+                                    </p>
+                                </div>
+                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value"> 25x</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="training-card card--medium">
+                            <div class="training-card__icon">
+                                <i class="fa-solid fa-plane"></i>
+                            </div>
+                            <div class="training-card__content">
+                                <h3 class="training-card__title">NORMALNY</h3>
+                                <div>
+                                    <p class="training-card__description">
+                                        Standardowa orbita. Zrównoważone wyzwanie dla aktywnych odkrywców.
+                                    </p>
+                                </div>
+                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value"> 50x</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="training-card card--hard">
+                            <div class="training-card__icon">
+                                <i class="fa-solid fa-gauge-simple-high"></i>
+                            </div>
+                            <div class="training-card__content">
+                                <h3 class="training-card__title">TRUDNY</h3>
+                                <div>
+                                    <p class="training-card__description">
+                                        Prędkości hipernapędu. Przetestuj granice swoich możliwości obliczeniowych.
+                                    </p>
+                                </div>
+                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value"> 100x</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="training-card card--eclipse">
+                            <div class="training-card__icon">
+                                <i class="fa-solid fa-dragon"></i>
+                            </div>
+                            <div class="training-card__content">
+                                <h3 class="training-card__title">LEGENDARNY</h3>
+                                <div>
+                                    <p class="training-card__description">
+                                        Intensywność czarnej dziury. Tylko dla elity matematycznych komandosów.
+                                    </p>
+                                </div>
+                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value"> 200x</span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Galactic Math Explorer</p>
+                </footer>
+
+            </div>
+        </main>
+
+    </div>
 </body>
+
 </html>

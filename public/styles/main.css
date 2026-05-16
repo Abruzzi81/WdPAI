@@ -1,10 +1,18 @@
-body {
-  margin: 0;
-  padding: 0;
-
-  background-image: radial-gradient(circle, #1C1D36 0%, #0B0C1F 100%);
+/* ====================================================================== */
+/* ======================== GLOBALNE / RESET ============================ */
+/* ====================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    background-image: radial-gradient(circle, #1C1D36 0%, #0B0C1F 100%);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #ffffff;
+    min-height: 100vh;
+}
 
 h1 {
     color: #81ECFF;
@@ -16,16 +24,14 @@ span {
     color: white;
 }
 
-
-main {     
-    margin-top: 60px;
-    margin-left: 250px;    
-    width: calc(100% - 210px);    
-    min-height: calc(100vh - 60px); 
-    padding: 10px;
-
+/* GŁÓWNY OBSZAR ROBOCZY (Obok sidebaru) */
+main {
+    margin-top: 60px;     /* Miejsce na zablokowany header strony */
+    margin-left: 210px;    /* Dokładnie tyle, ile wynosi szerokość sidebaru */
+    width: calc(100% - 210px);
+    min-height: calc(100vh - 60px);
+    padding: 20px;
     color: rgb(183, 165, 165);
-    box-sizing: border-box;
 }
 
 .layout {
@@ -35,14 +41,13 @@ main {
 /* ====================================================================== */
 /* =============================== SIDEBAR ============================== */
 /* ====================================================================== */
-
 .sidebar {
     width: 210px;
     padding: 20px;
-    position: fixed;   
-    top: 60px;            
-    left: 0;           
-    height: 100vh; 
+    position: fixed;
+    top: 60px;
+    left: 0;
+    height: calc(100vh - 60px);
 
     background-color: rgba(16, 17, 38, 0.8);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
@@ -50,9 +55,9 @@ main {
 }
 
 .sidebar ul {
-    display: flex;          
+    display: flex;
     flex-direction: column;
-    min-height: calc(100vh - 120px);
+    height: 100%;
     list-style: none;
     padding: 0;
 }
@@ -60,7 +65,7 @@ main {
 .sidebar li {
     margin-bottom: 30px;
     font-size: 21px;
-    margin-left: 30px;
+    margin-left: 15px; /* Delikatnie zmniejszony dla lepszego dopasowania */
 }
 
 .logout {
@@ -76,26 +81,25 @@ main {
 }
 
 /* ====================================================================== */
-/* =============================== HEADER =============================== */
+/* ======================== GLOBALNY HEADER STRONY ====================== */
 /* ====================================================================== */
-
 .galactic-header {
     height: 60px;
     width: 100%;
-    
+
     background-color: rgba(10, 11, 26, 0.6);
-    box-shadow: 0 4px 30px rgba(81, EC, FF, 0.5);
+    box-shadow: 0 4px 30px rgba(81, EC, FF, 0.2); /* Zmniejszono rozbłysk dla estetyki */
 
     display: flex;
-    justify-content: space-between; 
-    align-items: center;           
+    justify-content: space-between;
+    align-items: center;
     padding: 0px 50px;
-    box-sizing: border-box; /*padding nie powiększy headera powyżej 100% */
-
+    
     font-family: 'Orbitron', sans-serif;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 100; /* Gwarantuje, że pasek będzie zawsze na wierzchu */
 }
 
 .header-logo {
@@ -107,11 +111,11 @@ main {
 .header-stats {
     display: flex;
     align-items: center;
-    gap: 20px; /* Odstęp między pigułką a rangą */
+    gap: 20px;
 }
 
 .stat-pill {
-    background: rgba(0, 210, 255, 0.1); /* Półprzezroczysty błękit */
+    background: rgba(0, 210, 255, 0.1);
     border: 1px solid rgba(0, 210, 255, 0.3);
     border-radius: 20px;
     padding: 5px 15px;
@@ -135,33 +139,324 @@ main {
     font-weight: bold;
 }
 
+/* ====================================================================== */
+/* ==================== UKŁAD STRONY Z TRAINING           =============== */
+/* ====================================================================== */
 
-
-
-
-
-
-
-.display-mobile {
-  display: none !important;
+/* Kontener-rodzic wewnątrz Twojego <main> dzielący stronę na Górę, Środek i Dół */
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 100px); /* Elastyczna wysokość uwzględniająca paddingi */
 }
-@media screen and (max-width: 780px) {
-  aside,
-  main {
+
+/* 1. GÓRA: Twój nagłówek misji */
+.training-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* Środkuje pigułkę, h1 i p w poziomie */
+    text-align: center;      /* Środkuje tekst wewnątrz linii */
+    padding: 20px 20px 40px 20px;
     width: 100%;
-  }
+    max-width: 800px;
+    margin: 0 auto;          /* Środkuje cały blok nagłówka w wolnej przestrzeni */
+}
 
-  .display-mobile {
-    display: block !important;
-  }
+.training-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(26, 43, 76, 0.6);
+    border: 1px solid #2563eb;
+    border-radius: 50px;
+    padding: 6px 18px;
+    margin-bottom: 24px;
+}
 
-  nav > div.container > ul {
-    display: none;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    background-color: aliceblue;
+.training-badge__text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #38bdf8;
+}
+
+.training-title {
+    font-size: 2rem !important; /* !important upewni się, że zignorujemy globalne h1 z góry pliku */
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 16px 0;
+    color: #f1f5f9;
+    text-align: center;        
+    width: 100%;               
+}
+
+.training-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #94a3b8;
+    max-width: 650px;
+}
+
+/* 2. ŚRODEK (Główna zawartość / Twoje karty) */
+.page-main-content {
+    flex: 1; /* Automatycznie wypełnia wolną przestrzeń i spycha stopkę */
+    padding: 20px 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 3. DÓŁ (Stopka sekcji) */
+.page-footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    color: #475569;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 40px;
+}
+
+
+/* ======================== SIATKA I KARTY MISJI ======================== */
+
+
+/* Kontener trzymający wszystkie 4 karty obok siebie */
+.trainings-grid {
+    display: flex;
+    flex-wrap: wrap;          /* Pozwala kartom przejść do nowej linii na mniejszych ekranach */
+    gap: 20px;                /* Odstępy między kartami */
+    justify-content: center;  /* Środkuje karty w sekcji głównej */
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* Podstawowy wygląd pojedynczego boxa (karty) */
+.training-card {
+    background-color: rgba(14, 16, 41, 0.6); /* Ciemne, półprzezroczyste tło dopasowane do gry */
+    border-radius: 16px;
+    padding: 20px;
+    
+    display: flex;
+    flex-direction: column;   
+    align-items: center;      /* Środkuje ikonę oraz teksty w poziomie wewnątrz pionowej karty */
+    text-align: center;       /* Środkuje linijki tekstu wewnątrz karty */
+    
+    gap: 20px;                /* Odstęp w pionie między ikoną a tekstem */
+    flex: 1;                  /* Elastyczne dopasowanie szerokości */
+    min-width: 280px;         /* Minimalna szerokość pojedynczej karty */
+    max-width: 340px;         /* Maksymalna szerokość pojedynczej karty */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+/* Efekt najechania myszką (delikatne uniesienie) */
+.training-card:hover {
+    transform: translateY(-4px);
+}
+
+
+.training-card__icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;        /* Wielkość emoji w przypadku braku obrazka */
+}
+
+.training-card__icon {
+    width: 65px;
+    height: 65px;
+    
+    display: flex;            
+    align-items: center;     
+    justify-content: center;  
+    
+    border-radius: 16px;      /* zaokrąglenie rogów */
+    font-size: 1.8rem;        /* Rozmiar ikony */
+    
+    /* Domyślne, bardzo ciemne tło boksika z delikatną ramką */
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Część tekstowa karty */
+.training-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Tytuł misji wewnątrz karty */
+.training-card__title {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
     margin: 0;
-    width: 80%;
-  }
+}
+
+.training-card__description {
+    font-size: 0.85rem;       /* Mniejsza czcionka, żeby opis nie dominował karty */
+    line-height: 1.5;         /* Przyjazna dla oka interlinia */
+    color: #a0aabf;           /* Przygaszony szaro-niebieski kolor tekstu */
+    margin: 10px 0 15px 0;    /* Odstępy: 10px od symboli na górze, 15px od bonusu na dole */
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    min-height: 60px;         /* Wymusza równą wysokość opisów, dzięki czemu wszystkie karty będą identycznej wielkości */
+}
+
+/* Tekst z bonusem gwiezdnego pyłu */
+.training-card__bonus {
+    font-size: 0.85rem;
+    color: #94a3b8;           /* Szary, przygaszony tekst */
+    margin: 0;
+}
+
+/* Podświetlenie samej wartości mnożnika */
+.bonus-value {
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+/* ---------------------------------------------------------------------- */
+/* DOPASOWANIE KOLORÓW WYPEŁNIENIA I IKON DLA KAŻDEGO POZIOMU            */
+/* ---------------------------------------------------------------------- */
+
+/* Karta 1 - EASY (Zielona/Seledynowa poświata i ikona) */
+.card--easy .training-card__icon {
+    background-color: rgba(163, 230, 53, 0.06); /* Bardzo delikatne zielone wypełnienie */
+    border: 1px solid rgba(163, 230, 53, 0.2);  /* Zielona ramka */
+}
+.card--easy .training-card__icon i {
+    color: #a3e635; /* Kolor samej ikony Font Awesome */
+}
+
+/* Karta 2 - NORMAL (Błękitna poświata i ikona) */
+.card--medium .training-card__icon {
+    background-color: rgba(56, 189, 248, 0.06); /* Delikatne błękitne wypełnienie */
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+.card--medium .training-card__icon i {
+    color: #38bdf8;
+}
+
+/* Karta 3 - HARD (Różowa/Fioletowa poświata i ikona) */
+.card--hard .training-card__icon {
+    background-color: rgba(244, 63, 94, 0.06);  /* Delikatne różowe wypełnienie */
+    border: 1px solid rgba(244, 63, 94, 0.2);
+}
+.card--hard .training-card__icon i {
+    color: #f43f5e;
+}
+
+/* Karta 4 - LEGENDARY (Złota poświata i ikona) */
+.card--eclipse .training-card__icon {
+    background-color: rgba(234, 179, 8, 0.06);   /* Delikatne złote wypełnienie */
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+.card--eclipse .training-card__icon i {
+    color: #eab308;
+}
+
+/* ---------------------------------------------------------------------- */
+/* INDYWIDUALNE KOLORY RAMEK (NEON)                                       */
+/* ---------------------------------------------------------------------- */
+
+/* Karta 1 - Easy (Seledynowa zieleń) */
+.card--easy {
+    border: 1px solid rgba(163, 230, 53, 0.3);
+    box-shadow: inset 0 0 15px rgba(163, 230, 53, 0.05);
+}
+
+.card--easy .bonus-value {
+    color: #A3E635CC;
+}
+.card--easy:hover {
+    box-shadow: 0 0 20px rgba(163, 230, 53, 0.25);
+    border-color: rgba(163, 230, 53, 0.8);
+}
+
+/* Karta 2 - Medium (Jasny błękit) */
+.card--medium {
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.05);
+}
+
+.card--medium .bonus-value {
+    color: #38bdf8;
+}
+.card--medium:hover {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    border-color: rgba(56, 189, 248, 0.8);
+}
+
+/* Karta 3 - Hard (Neonowy róż) */
+.card--hard {
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    box-shadow: inset 0 0 15px rgba(244, 63, 94, 0.05);
+}
+
+.card--hard .bonus-value {
+    color: #f43f5e;
+}
+.card--hard:hover {
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+    border-color: rgba(244, 63, 94, 0.8);
+}
+
+/* Karta 4 - Expert/Eclipse (Złoty) */
+.card--eclipse {
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.05);
+}
+
+.card--eclipse .bonus-value {
+    color: #eab308;
+}
+.card--eclipse:hover {
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
+    border-color: rgba(234, 179, 8, 0.8);
+}
+
+
+
+
+/* ====================================================================== */
+/* ========================== RESPONSYWNOŚĆ ============================= */
+/* ====================================================================== */
+.display-mobile {
+    display: none !important;
+}
+
+@media screen and (max-width: 780px) {
+    main {
+        width: 100%;
+        margin-left: 0; /* Sidebar znika / chowa się, main zajmuje 100% */
+    }
+
+    .sidebar {
+        display: none; /* Ukrycie sidebaru na telefonach (do obsłużenia skryptem) */
+    }
+
+    .training-title {
+        font-size: 2rem;
+    }
+
+    .display-mobile {
+        display: block !important;
+    }
+
+    nav>div.container>ul {
+        display: none;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        background-color: aliceblue;
+        margin: 0;
+        width: 80%;
+    }
 }

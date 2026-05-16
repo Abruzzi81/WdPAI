@@ -1,15 +1,25 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
+<!doctype html>
+<html lang="en">
+  <head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
     <title><?= $title; ?></title>
-    <link rel="stylesheet" href="public/css/style.css"> <script src="https://kit.fontawesome.com/your-font-awesome-key.js" crossorigin="anonymous"></script>
-</head>
-<body>
+  </head>
+  <body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
 
-    <header class="galactic-header">
-        <h1>Profile</h1>
-    </header>
+    <div class="layout">
+      <?php include __DIR__ . '/partials/nav.html'; ?>
+      <main>
+        <h2>Witaj w systemie, Komandorze!</h2>
+        <p>Tutaj pojawią się Twoje zadania matematyczne...</p>
 
-</body>
+        
+      <?php foreach($users as $key=>$value): ?>
+        <span><?= $value["username"]; ?></span>
+        <span><?= $value["email"]; ?></span>
+        <br />
+      <?php endforeach; ?>
+      </main>
+    </div>
+  </body>
 </html>
