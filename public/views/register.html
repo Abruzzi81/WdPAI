@@ -1,25 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
+<head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-  </head>
-  <body>
-    <form method="POST" action="\register">
-      <h1>REGISTER FORM</h1>
+</head>
+<body class="login-page-body">
 
-      <?php if(isset($messages)): ?>
+    <div class="login-card">
+        
+        <div class="login-badge-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
 
-      <p class="messages">
-        <?= $messages ?>
-      </p>
+        <h1 class="login-title">Dołącz do załogi</h1>
+        <p class="login-subtitle">Stwórz swój profil kadeta</p>
 
-      <?php endif; ?>
-      <input name="email" type="email" placeholder="Twój email" />
-      <input name="password" type="password" placeholder="Twoje hasło" />
-      <input name="password2" type="password" placeholder="Powtórz hasło" />
+        <?php if(isset($messages)): ?>
+            <p class="messages">
+                <?= $messages ?>
+            </p>
+        <?php endif; ?>
 
-      <input name="username" type="text" placeholder="Username" />
-      <button type="submit">REGISTER</button>
-    </form>
-  </body>
+        <form method="POST" action="\register">
+          
+            <div class="input-group">
+                <label class="input-label">Nazwa Kadeta</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <input name="username" type="text" class="input-field" placeholder="Username" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Kosmiczne ID</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-user"></i>
+                    <input name="email" type="email" class="input-field" placeholder="Twój email" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Sekretny Kod</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input name="password" type="password" class="input-field" placeholder="Twoje hasło" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Potwierdź sekretny kod</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <input name="password2" type="password" class="input-field" placeholder="Powtórz hasło" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-engage">
+                Zarejestruj <i class="fa-solid fa-rocket"></i>
+            </button>
+
+        </form>
+
+        <div class="card-links">
+            <p class="link-signup">Jesteś już zarejestrowany? <a href="/login">&larr; Powrót do logowania</a></p>
+        </div>
+
+    </div>
+
+    <footer class="global-footer">
+        <div class="footer-left">
+            &copy; 2026 Galactic Command Center
+        </div>
+        <div class="footer-right">
+            <a href="#">Privacy Protocol</a>
+            <a href="#">Starship Safety</a>
+        </div>
+    </footer>
+
+</body>
 </html>

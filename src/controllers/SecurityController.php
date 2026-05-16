@@ -1,6 +1,8 @@
 <?php
 
 require_once 'AppController.php';
+// Upewnij się, że plik z repozytorium jest zaimportowany, jeśli nie działa automatyczne ładowanie klas:
+// require_once __DIR__.'/../repository/UsersRepository.php'; 
 
 class SecurityController extends AppController {
 
@@ -13,69 +15,63 @@ class SecurityController extends AppController {
         $email = $_POST["email"] ?? '';
         $password = $_POST["password"] ?? '';
 
-        // var_dump($email);
-
         if (empty($email) || empty($password)) {
             return $this->render('login', ['messages' => 'Fill all fields']);
         }
 
-       //TODO get from database user with given email
+        // NAPRAWA BŁĘDU: Tworzymy instancję repozytorium i szukamy użytkownika
+        $userRepository = new UsersRepository();
+        $user = $userRepository->getUserByEmail($email);
       
+        // Teraz zmienna $user już istnieje, więc ten warunek zadziała poprawnie
         if (!$user) {
             return $this->render('login', ['messages' => 'User not found']);
         }
 
+        // Weryfikacja hasła (zakładając, że $user to tablica asocjacyjna zwracana z bazy)
         if (!password_verify($password, $user['password'])) {
             return $this->render('login', ['messages' => 'Wrong password']);
         }
 
-        // TODO możemy przechowywać sesje użytkowika lub token
-        // setcookie("username", $user['email'], time() + 3600, '/');
+        // Logowanie powiodło się - ustawiamy ciasteczko sesyjne
+        setcookie("username", $user['email'], time() + 3600, '/');
 
         $url = "http://$_SERVER[HTTP_HOST]";
-        header("Location: {$url}/dashboard");
+        header("Location: {$url}/mission");
+        exit(); // Dobra praktyka po przekierowaniu header Location
     }
 
-
-    
     public function register() {
        $userRepository = new UsersRepository();
 
-
-       // TOTO
        if ($this->isPost()) {
                $email = trim($_POST['email'] ?? '');
                $password = $_POST['password'] ?? '';
                $password2 = $_POST['password2'] ?? '';
                $username = $_POST['username'] ?? '';
 
-
                if (empty($email) || empty($password) || empty($username)) {
                    return $this->render('register', ['messages' => 'Fill all fields']);
                }
 
+               // TODO: Porównać czy password === password2 przed rejestracją
+               if ($password !== $password2) {
+                   return $this->render('register', ['messages' => 'Passwords do not match']);
+               }
 
-               // TODO porównać czy hasło1 równe z hasło2
-
-
-               // TODO check if user exists
                $user = $userRepository->getUserByEmail($email);
                if($user) {
                    return $this->render("register", ["messages" => "User exists"]);
                }
 
-
                $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
                $userRepository->createUser($email, $hashedPassword, $username);
-
 
                $url = "http://$_SERVER[HTTP_HOST]";
                header("Location: {$url}/login");
                return;
        }
 
-
        return $this->render("register");
    }
-
 }
