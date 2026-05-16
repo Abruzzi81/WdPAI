@@ -1,76 +1,146 @@
 body {
   margin: 0;
+  padding: 0;
+
+  background-image: radial-gradient(circle, #1C1D36 0%, #0B0C1F 100%);
 }
+
 
 h1 {
-  color: purple;
-  font-size: large;
-  font-weight: 700;
+    color: #81ECFF;
+    font-size: large;
+    font-weight: 700;
 }
 
-nav {
-  background-color: gray;
-}
-
-nav > div.container {
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 80px;
-}
-
-nav > div.container > ul {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-  list-style-type: none;
-}
-
-nav > div.container > ul > li > a {
-  text-decoration: none;
-  color: white;
-}
-
-.container {
-  max-width: 1000px;
-  margin: auto;
-}
-
-nav a {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  justify-content: center;
-  align-items: center;
-}
-
-nav a > i {
-  font-size: 1.25rem;
+span {
+    color: white;
 }
 
 
-main {
-  background-color: antiquewhite;
-  width: 70%;
-  height: calc(100vh - 6rem);
-}
+main {     
+    margin-top: 60px;
+    margin-left: 250px;    
+    width: calc(100% - 210px);    
+    min-height: calc(100vh - 60px); 
+    padding: 10px;
 
-aside {
-  background-color: aqua;
-  width: 30%;
-}
-
-footer {
-  background-color: aquamarine;
-  width: 100%;
+    color: rgb(183, 165, 165);
+    box-sizing: border-box;
 }
 
 .layout {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+    display: flex;
 }
+
+/* ====================================================================== */
+/* =============================== SIDEBAR ============================== */
+/* ====================================================================== */
+
+.sidebar {
+    width: 210px;
+    padding: 20px;
+    position: fixed;   
+    top: 60px;            
+    left: 0;           
+    height: 100vh; 
+
+    background-color: rgba(16, 17, 38, 0.8);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(70, 70, 91, 0.2);
+}
+
+.sidebar ul {
+    display: flex;          
+    flex-direction: column;
+    min-height: calc(100vh - 120px);
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin-bottom: 30px;
+    font-size: 21px;
+    margin-left: 30px;
+}
+
+.logout {
+    margin-top: auto; /* Wypycha element na sam dół listy */
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #46465B;
+    text-decoration: none;
+}
+
+/* ====================================================================== */
+/* =============================== HEADER =============================== */
+/* ====================================================================== */
+
+.galactic-header {
+    height: 60px;
+    width: 100%;
+    
+    background-color: rgba(10, 11, 26, 0.6);
+    box-shadow: 0 4px 30px rgba(81, EC, FF, 0.5);
+
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;           
+    padding: 0px 50px;
+    box-sizing: border-box; /*padding nie powiększy headera powyżej 100% */
+
+    font-family: 'Orbitron', sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.header-logo {
+    color: #81ECFF;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Odstęp między pigułką a rangą */
+}
+
+.stat-pill {
+    background: rgba(0, 210, 255, 0.1); /* Półprzezroczysty błękit */
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    border-radius: 20px;
+    padding: 5px 15px;
+    color: #00d2ff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.rank-info {
+    color: #a0aabf;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rank-name {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+
+
+
+
+
+
 
 .display-mobile {
   display: none !important;

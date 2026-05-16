@@ -5,16 +5,21 @@
     <title><?= $title; ?></title>
   </head>
   <body>
-    <?php include __DIR__ . '/partials/nav.html'; ?>
+    <?php include __DIR__ . '/partials/header.html'; ?>
 
-    <div class="container layout">
+    <div class="layout">
+      <?php include __DIR__ . '/partials/nav.html'; ?>
       <main>
-        <h1>INDEX</h1>
+        <h2>Witaj w systemie, Komandorze!</h2>
+        <p>Tutaj pojawią się Twoje zadania matematyczne...</p>
+
+        
+      <?php foreach($users as $key=>$value): ?>
+        <span><?= $value["username"]; ?></span>
+        <span><?= $value["email"]; ?></span>
+        <br />
+      <?php endforeach; ?>
       </main>
-      <aside>
-        <p>TODO later</p>
-      </aside>
-      <footer>2026</footer>
     </div>
   </body>
 </html>
