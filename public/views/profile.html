@@ -1,25 +1,158 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-    <title><?= $title; ?></title>
-  </head>
-  <body>
+    <title>
+        <?= $title; ?>
+    </title>
+</head>
+
+<body>
     <?php include __DIR__ . '/partials/header.html'; ?>
 
     <div class="layout">
-      <?php include __DIR__ . '/partials/nav.html'; ?>
-      <main>
-        <h2>Witaj w systemie, Komandorze!</h2>
-        <p>Tutaj pojawią się Twoje zadania matematyczne...</p>
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+        <main>
+            <div class="page-layout">
 
-        
-      <?php foreach($users as $key=>$value): ?>
-        <span><?= $value["username"]; ?></span>
-        <span><?= $value["email"]; ?></span>
-        <br />
-      <?php endforeach; ?>
-      </main>
+                <header class="profile-header">
+                    <div class="profile-avatar-container">
+                        <div class="profile-avatar">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                        <div class="profile-identity">
+                            <h1 class="profile-username">Komandor Alfa</h1>
+                            <p class="profile-rank">Ranga: Rekrut</p>
+                        </div>
+                    </div>
+
+                    <div class="profile-stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Level</span>
+                            <span class="stat-value text-easy">42</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Gwiezdny pył</span>
+                            <span class="stat-value text-medium">14,250</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Misje</span>
+                            <span class="stat-value text-hard">128</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Dokładność</span>
+                            <span class="stat-value text-legendary">87.5%</span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="profile-content-layout">
+
+                    <section class="profile-section">
+                        <h2 class="section-title"><i class="fa-solid fa-trophy text-legendary"></i> Odblokowane osiągnięcia
+                        </h2>
+                        <div class="achievements-list">
+
+                            <div class="achievement-item item--unlocked">
+                                <div class="achievement-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div class="achievement-details">
+                                    <h4 class="achievement-name">Pierwsza orbita</h4>
+                                    <p class="achievement-desc">Ukończ pomyślnie swoją pierwszą misję szkoleniową.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="achievement-item item--unlocked">
+                                <div class="achievement-icon"><i class="fa-solid fa-bolt"></i></div>
+                                <div class="achievement-details">
+                                    <h4 class="achievement-name">Prędkość światła</h4>
+                                    <p class="achievement-desc">Odpowiedz poprawnie na 10 pytań matematycznych w czasie krótszym niż 30 sekund.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="achievement-item item--unlocked">
+                                <div class="achievement-icon"><i class="fa-solid fa-shuttle-space"></i></div>
+                                <div class="achievement-details">
+                                    <h4 class="achievement-name">Zdobywca kosmosu</h4>
+                                    <p class="achievement-desc">Ukończ z sukcesem swoją pierwszą misję na Jowiszu.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="achievement-item item--locked">
+                                <div class="achievement-icon"><i class="fa-solid fa-atom"></i></div>
+                                <div class="achievement-details">
+                                    <h4 class="achievement-name">Zero absolutne</h4>
+                                    <p class="achievement-desc">Ukończ trening na poziomie trudnym bez popełniania ani jednego błędu.</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section class="profile-section">
+                        <h2 class="section-title"><i class="fa-solid fa-clock-rotate-left text-medium"></i>
+                            Historia Misji</h2>
+                        <div class="mission-log-list">
+
+                            <div class="log-item border-easy">
+                                <div class="log-info">
+                                    <span class="log-badge bg-easy">Łatwy</span>
+                                    <h4 class="log-name">Trening</h4>
+                                </div>
+                                <div class="log-meta">
+                                    <span class="log-reward">＋25 ✨</span>
+                                    <span class="log-date">Today</span>
+                                </div>
+                            </div>
+
+                            <div class="log-item border-hard">
+                                <div class="log-info">
+                                    <span class="log-badge bg-hard">Trudny</span>
+                                    <h4 class="log-name">Trening</h4>
+                                </div>
+                                <div class="log-meta">
+                                    <span class="log-reward">＋100 ✨</span>
+                                    <span class="log-date">Yesterday</span>
+                                </div>
+                            </div>
+
+                            <div class="log-item border-medium">
+                                <div class="log-info">
+                                    <span class="log-badge bg-medium">Normalny</span>
+                                    <h4 class="log-name">Trening</h4>
+                                </div>
+                                <div class="log-meta">
+                                    <span class="log-reward">＋50 ✨</span>
+                                    <span class="log-date">3 days ago</span>
+                                </div>
+                            </div>
+
+                            <div class="log-item border-legendary">
+                                <div class="log-info">
+                                    <span class="log-badge bg-legendary">Legendarny</span>
+                                    <h4 class="log-name">Trening</h4>
+                                </div>
+                                <div class="log-meta">
+                                    <span class="log-reward">＋200 ✨</span>
+                                    <span class="log-date">1 week ago</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                </div>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Akademia Matematyczna.</p>
+                </footer>
+
+            </div>
+        </main>
     </div>
-  </body>
+</body>
+
 </html>

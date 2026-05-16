@@ -354,11 +354,11 @@ main {
 }
 
 /* Karta 4 - LEGENDARY (Złota poświata i ikona) */
-.card--eclipse .training-card__icon {
+.card--legendary .training-card__icon {
     background-color: rgba(234, 179, 8, 0.06);   /* Delikatne złote wypełnienie */
     border: 1px solid rgba(234, 179, 8, 0.2);
 }
-.card--eclipse .training-card__icon i {
+.card--legendary .training-card__icon i {
     color: #eab308;
 }
 
@@ -408,19 +408,262 @@ main {
     border-color: rgba(244, 63, 94, 0.8);
 }
 
-/* Karta 4 - Expert/Eclipse (Złoty) */
-.card--eclipse {
+/* Karta 4 - Expert/legendary (Złoty) */
+.card--legendary {
     border: 1px solid rgba(234, 179, 8, 0.3);
     box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.05);
 }
 
-.card--eclipse .bonus-value {
+.card--legendary .bonus-value {
     color: #eab308;
 }
-.card--eclipse:hover {
+.card--legendary:hover {
     box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
     border-color: rgba(234, 179, 8, 0.8);
 }
+
+
+/* ====================================================================== */
+/* ========================== SEKCJA PROFILU ============================ */
+/* ====================================================================== */
+
+
+.bg-easy { background-color: rgba(163, 230, 53, 0.2); color: #a3e635; border: 1px solid rgba(163, 230, 53, 0.4); }
+.bg-medium { background-color: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); }
+.bg-hard { background-color: rgba(244, 63, 94, 0.2); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.4); }
+.bg-legendary { background-color: rgba(234, 179, 8, 0.2); color: #eab308; border: 1px solid rgba(234, 179, 8, 0.4); }
+
+.border-easy { border-left: 4px solid #a3e635; }
+.border-medium { border-left: 4px solid #38bdf8; }
+.border-hard { border-left: 4px solid #f43f5e; }
+.border-legendary { border-left: 4px solid #eab308; }
+
+/* --- 1. NAGŁÓWEK PROFILU --- */
+.profile-header {
+    background-color: rgba(14, 16, 41, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+}
+
+.profile-avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background-color: rgba(56, 189, 248, 0.1);
+    border: 2px solid #38bdf8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #38bdf8;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+}
+
+.profile-username {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.profile-rank {
+    font-size: 0.95rem;
+    color: #94a3b8;
+}
+
+.profile-stats-grid {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.stat-box {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 110px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+/* --- UKŁAD SEKCJI DOLNYCH --- */
+.profile-content-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-section {
+    flex: 1;
+    min-width: 320px;
+    background-color: rgba(14, 16, 41, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 25px;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- 2. STYL OSIĄGNIĘĆ --- */
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.achievement-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.item--unlocked .achievement-icon {
+    background-color: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #eab308;
+}
+
+.item--unlocked .achievement-name {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* Stan zablokowany */
+.item--locked {
+    opacity: 0.5;
+}
+.item--locked .achievement-icon {
+    background-color: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+}
+.item--locked .achievement-name {
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+.achievement-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* --- 3. STYL OSTATNICH MISJI --- */
+.mission-log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.log-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.log-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.log-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.log-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.log-name {
+    font-size: 0.95rem;
+    color: #f1f5f9;
+    font-weight: 500;
+}
+
+.log-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.log-reward {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #38bdf8;
+}
+
+.log-date {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
 
 
 
