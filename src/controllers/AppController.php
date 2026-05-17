@@ -32,4 +32,18 @@ class AppController {
         echo $output;
     }
 
+    protected function requireLogin()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if (empty($_SESSION['user_id'])) {
+            $url = "http://$_SERVER[HTTP_HOST]";
+            header("Location: {$url}/login");
+            exit();
+        }
+    }
+
+
 }

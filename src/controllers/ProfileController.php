@@ -5,7 +5,9 @@ require_once 'AppController.php';
 class ProfileController extends AppController {
 
     public function profile() {
-        $title = "CENTRUM TRENINGOWE GALAXY";
+        $this->requireLogin();
+
+        $title = "Galactic Math Explorer";
 
         return $this->render("profile", [
             "title" => $title, 

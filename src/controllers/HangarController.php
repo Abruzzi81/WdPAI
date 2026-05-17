@@ -5,7 +5,9 @@ require_once 'AppController.php';
 class HangarController extends AppController {
 
     public function hangar() {
-        $title = "CENTRUM TRENINGOWE GALAXY";
+        $this->requireLogin();
+
+        $title = "Galactic Math Explorer";
 
         return $this->render("hangar", [
             "title" => $title, 

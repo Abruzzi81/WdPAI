@@ -5,7 +5,9 @@ require_once 'AppController.php';
 class TrainingController extends AppController {
 
     public function training() {
-        $title = "CENTRUM TRENINGOWE GALAXY";
+        $this->requireLogin();
+
+        $title = "Galactic Math Explorer";
         
         // Przykładowe dane zadań (później mogą pochodzić z bazy danych)
         $exercises = [

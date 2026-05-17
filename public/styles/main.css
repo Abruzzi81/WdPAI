@@ -1146,6 +1146,14 @@ main {
 /* ========================== STRONA LOGOWANIA ========================== */
 /* ====================================================================== */
 
+/* Styl dla pola wejściowego, które nie przeszło walidacji JavaScript */
+.input-field.no-valid {
+    border: 2px solid #ff4d4d !important; /* Wyrazisty czerwony kolor ramki */
+    background-color: rgba(255, 77, 77, 0.05); /* Delikatne czerwone tło wewnątrz pola */
+    box-shadow: 0 0 8px rgba(255, 77, 77, 0.2); /* Kosmiczna, czerwona poświata wokół pola */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
 /* Styl nakładany na znacznik body tylko na stronie logowania/rejestracji */
 .login-page-body {
     min-height: 100vh;
@@ -1167,6 +1175,10 @@ main {
 }
 
 /* CENTRALNY PANEL LOGOWANIA */
+.messages {
+    padding: 20px;
+}
+
 .login-card {
     width: 100%;
     max-width: 420px;

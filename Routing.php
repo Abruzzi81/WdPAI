@@ -29,6 +29,10 @@ class Routing {
             "action" => "register"
         ],
 
+        "logout" => [
+            "controller" => "SecurityController",
+            "action" => "logout"
+        ],
 
         "mission" => [
             "controller" => "MissionController",

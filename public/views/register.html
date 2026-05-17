@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <?php include __DIR__ . '/partials/head.html'; ?>
 </head>
+
 <body class="login-page-body">
 
     <div class="login-card">
-        
+
         <div class="login-badge-icon">
             <i class="fa-solid fa-graduation-cap"></i>
         </div>
@@ -15,18 +17,21 @@
         <p class="login-subtitle">Stwórz swój profil kadeta</p>
 
         <?php if(isset($messages)): ?>
-            <p class="messages">
-                <?= $messages ?>
-            </p>
+        <p class="messages">
+            <?= $messages ?>
+        </p>
         <?php endif; ?>
 
         <form method="POST" action="\register">
-          
+
             <div class="input-group">
                 <label class="input-label">Nazwa Kadeta</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-user-gear"></i>
-                    <input name="username" type="text" class="input-field" placeholder="Username" required autocomplete="off">
+                    <!-- Dodany atrybut value dla username aby dane sie nie kasowały -->
+                    <input name="username" type="text" class="input-field" placeholder="Username"
+                        value="<?= isset($data['username']) ? htmlspecialchars($data['username']) : '' ?>" required
+                        autocomplete="off">
                 </div>
             </div>
 
@@ -34,7 +39,10 @@
                 <label class="input-label">Kosmiczne ID</label>
                 <div class="input-wrapper">
                     <i class="fa-regular fa-user"></i>
-                    <input name="email" type="email" class="input-field" placeholder="Twój email" required autocomplete="off">
+                    <!-- Dodany atrybut value dla username aby dane sie nie kasowały -->
+                    <input name="email" type="email" class="input-field" placeholder="Twój email"
+                        value="<?= isset($data['email']) ? htmlspecialchars($data['email']) : '' ?>" required
+                        autocomplete="off">
                 </div>
             </div>
 
@@ -77,4 +85,5 @@
     </footer>
 
 </body>
+
 </html>
