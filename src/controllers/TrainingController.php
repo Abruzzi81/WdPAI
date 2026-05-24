@@ -64,4 +64,42 @@ class TrainingController extends AppController
             "number2" => rand($min, $max)
         ]);
     }
+
+    public function saveTrainingResult() 
+{
+    // 1. Odbieramy surowe dane JSON wysłane za pomocą JavaScript Fetch API
+    $json = file_get_contents('php://input');
+    $data = json_decode($json, true);
+
+    // 2. Upewniamy się, że sesja jest uruchomiona
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // 3. Walidacja: Sprawdzamy czy gracz jest zalogowany i czy przesłał poprawne dane
+    if (!empty($_SESSION['user_id']) && isset($data['score']) && isset($data['level'])) {
+        $userId = $_SESSION['user_id'];
+        $score = (int)$data['score'];
+        $level = $data['level']; // np. 'easy', 'hard'
+
+        // 4. Wywołujemy repozytorium, które zaktualizuje bazę i zwróci obliczoną nagrodę
+        $userRepo = new UsersRepository();
+        $earnedStarDust = $userRepo->addTrainingReward($userId, $score, $level);
+
+        // 5. Odsyłamy do JavaScript odpowiedź w formacie JSON
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'success',
+            'score' => $score,
+            'earned_star_dust' => $earnedStarDust
+        ]);
+        exit();
+    }
+
+    // Jeśli coś poszło nie tak (np. brak autoryzacji)
+    header('Content-Type: application/json');
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => 'Nieprawidłowe żądanie lub brak logowania']);
+    exit();
+}
 }

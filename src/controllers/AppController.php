@@ -1,7 +1,10 @@
 <?php
 
+// Dołączamy repozytorium, aby móc odpytać bazę o statystyki gracza
+require_once __DIR__ . '/../repositories/UsersRepository.php'; 
 
 class AppController {
+    
     protected function isGet(): bool
     {
         return $_SERVER["REQUEST_METHOD"] === 'GET';
@@ -14,11 +17,29 @@ class AppController {
  
     protected function render(string $template = null, array $variables = [])
     {
+        // === AUTOMATYCZNE POBIERANIE DANYCH DO HEADERA ===
+        // 1. Sprawdzamy bezpiecznie, czy sesja istnieje
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // 2. Jeśli użytkownik jest zalogowany, dociągamy jego aktualne statystyki z bazy
+        if (!empty($_SESSION['user_id'])) {
+            $userRepo = new UsersRepository();
+            $playerStats = $userRepo->getUserDetails($_SESSION['user_id']);
+            
+            // 3. Wstrzykujemy dane do zmiennych widoku pod kluczem 'loggedPlayer'
+            // Dzięki temu zmienna $loggedPlayer będzie dostępna w KAŻDYM pliku .html/.php
+            $variables['loggedPlayer'] = $playerStats;
+        }
+        // =================================================
+
         $templatePath = 'public/views/'. $template.'.html';
         $templatePath404 = 'public/views/404.html';
         $output = "";
                  
         if(file_exists($templatePath)){
+            // Funkcja extract zamieni klucz 'loggedPlayer' na zmienną $loggedPlayer
             extract($variables);
 
             ob_start();
@@ -44,6 +65,4 @@ class AppController {
             exit();
         }
     }
-
-
 }

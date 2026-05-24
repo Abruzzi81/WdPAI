@@ -6,11 +6,11 @@
     <div class="header-stats">
         
         <div class="stat-pill">
-            <span>✨ 1,500 Gwiezdny pył</span>
+            <span>✨ <?= number_format($loggedPlayer['star_dust'] ?? 0) ?> Gwiezdny pył</span>
         </div>
 
         <div class="rank-info">
-            RANGA: <span class="rank-name">NOVA</span>
+            RANGA: <span class="rank-name"><?= htmlspecialchars($loggedPlayer['rank_name'] ?? 'REKRUT ACADEMY') ?></span>
             <i class="fa-solid fa-medal"></i>
         </div>
         
