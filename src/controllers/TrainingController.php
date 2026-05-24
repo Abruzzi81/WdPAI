@@ -36,21 +36,32 @@ class TrainingController extends AppController
      */
     public function game($id)
     {
-        // Zabezpieczenie: chronimy również sam ekran gry przed niezalogowanymi
         $this->requireLogin();
-
         $title = "OPERACJA: MNOŻENIE";
 
-        // Generator liczb dla operacji mnożenia (zwraca liczby od 2 do 9)
-        $number1 = rand(2, 9);
-        $number2 = rand(2, 9);
+        $level = strtolower($id);
+        $min = 2;
+        $max = 9;
 
-        // Renderowanie widoku aktywnego reaktora matematycznego (training_game.php)
+        if ($level === 'easy') {
+            $min = 1;
+            $max = 5;
+        } elseif ($level === 'normal') {
+            $min = 1;
+            $max = 7;
+        } elseif ($level === 'hard') {
+            $min = 1;
+            $max = 10;
+        } elseif ($level === 'legendary') {
+            $min = 1;
+            $max = 15;
+        }
+
         return $this->render("training-game", [
             "title" => $title,
-            "level" => strtoupper($id), // Zamienia np. 'easy' na 'EASY' do nagłówka
-            "number1" => $number1,
-            "number2" => $number2
+            "level" => strtoupper($id),
+            "number1" => rand($min, $max),
+            "number2" => rand($min, $max)
         ]);
     }
 }

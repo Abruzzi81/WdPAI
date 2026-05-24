@@ -14,7 +14,7 @@
             <div class="game-status-bar">
                 <div class="status-item timer-box">
                     <i class="fa-solid fa-hourglass-half"></i>
-                    <span>CZAS: <strong id="countdown">30</strong>s</span>
+                    <span>CZAS: <strong id="countdown">120</strong>s</span>
                 </div>
                 <div class="status-item level-badge">
                     <span>SEKTOR: <strong><?= $level ?></strong></span>
@@ -44,19 +44,6 @@
             </div>
         </main>
     </div>
-
-    <script>
-        let timeLeft = 30;
-        const timerElement = document.getElementById('countdown');
-        const countdownInterval = setInterval(() => {
-            timeLeft--;
-            timerElement.innerText = timeLeft;
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                alert('Koniec czasu! Twój wynik to: ' + document.getElementById('score-counter').innerText);
-                window.location.href = '/training';
-            }
-        }, 1000);
-    </script>
+    <script src="/public/scripts/training-game.js" defer></script>
 </body>
 </html>
