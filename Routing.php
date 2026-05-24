@@ -2,7 +2,6 @@
 
 require_once 'src/controllers/SecurityController.php';
 require_once 'src/controllers/DashboardController.php';
-
 require_once 'src/controllers/MissionController.php';
 require_once 'src/controllers/TrainingController.php';
 require_once 'src/controllers/HangarController.php';
@@ -10,7 +9,7 @@ require_once 'src/controllers/ProfileController.php';
 
 class Routing {
 
-    // Tablica przechowująca konfigurację ścieżek
+    // Tablica przechowująca konfigurację ścieżek bazowych
     public static $routes = [
         "login" => [
             "controller" => "SecurityController",
@@ -28,34 +27,30 @@ class Routing {
             "controller" => "SecurityController",
             "action" => "register"
         ],
-
         "logout" => [
             "controller" => "SecurityController",
             "action" => "logout"
         ],
-
         "mission" => [
             "controller" => "MissionController",
             "action" => "mission"
         ],
-
         "training" => [
             "controller" => "TrainingController",
             "action" => "training"
         ],
-
         "hangar" => [
             "controller" => "HangarController",
             "action" => "hangar"
         ],
-
         "profile" => [
             "controller" => "ProfileController",
             "action" => "profile"
         ]
+        // Usunęliśmy stąd "easy" – teraz obsłuży to automatyczny REGEX poniżej!
     ];
 
-    // TODO 1: SINGLETON - Tablica przechowująca już utworzone instancje kontrolerów
+    // SINGLETON - Tablica przechowująca już utworzone instancje kontrolerów
     private static $instances = [];
 
     // Metoda pomocnicza do pobierania/tworzenia pojedynczej instancji kontrolera (Singleton)
@@ -67,30 +62,38 @@ class Routing {
     }
 
     public static function run(string $path) {
-        // Zmienna na ewentualne ID wyciągnięte z adresu URL
-        $id = null;
+    $id = null;
+    $customAction = null; // Dodatkowa zmienna na wypadek zmiany akcji
 
-        // TODO 2: REGEX - Obsługa adresów typu dashboard/12234
-        // Szukamy wzorca: "dashboard/" po którym następuje ciąg cyfr (\d+)
-        if (preg_match('/^dashboard\/(\d+)$/', $path, $matches)) {
-            $path = 'dashboard'; // Ustawiamy ścieżkę bazową dla tablicy $routes
-            $id = $matches[1];   // Wyciągamy złapane cyfry jako ID (np. 12234)
-        }
-
-        // TODO 3: Zmiana switch na array_key_exists
-        // Sprawdzamy, czy oczyszczona ścieżka istnieje w naszej mapie $routes
-        if (array_key_exists($path, self::$routes)) {
-            $controllerName = self::$routes[$path]["controller"];
-            $action = self::$routes[$path]["action"];
-
-            // Wywołujemy kontroler przez mechanizm Singletona
-            $controllerObj = self::getControllerInstance($controllerName);
-            
-            // Uruchamiamy akcję i przekazujemy ID (będzie liczbą lub null)
-            $controllerObj->$action($id);
-        } else {
-            // Jeśli ścieżka nie istnieje w tablicy - błąd 404
-            include 'public/views/404.html';
-        }
+    // 1. REGEX - Obsługa adresów typu dashboard/12234
+    if (preg_match('/^dashboard\/(\d+)$/', $path, $matches)) {
+        $path = 'dashboard'; 
+        $id = $matches[1];   
     }
+
+    // 2. REGEX - Obsługa adresów typu training/easy, training/hard itp.
+    if (preg_match('/^training\/([a-zA-Z]+)$/', $path, $matches)) {
+        $path = 'training'; 
+        $id = $matches[1];   
+        
+        // Zamiast modyfikować tablicę, zapisujemy, że chcemy odpalić metodę "game"
+        $customAction = "game"; 
+    }
+
+    // Sprawdzamy, czy ścieżka istnieje w naszej mapie $routes
+    if (array_key_exists($path, self::$routes)) {
+        $controllerName = self::$routes[$path]["controller"];
+        
+        // JEŚLI REGEX ustawil własną akcję (game), użyj jej. W innym wypadku weź domyślną z tablicy.
+        $action = ($customAction !== null) ? $customAction : self::$routes[$path]["action"];
+
+        // Wywołujemy kontroler przez mechanizm Singletona
+        $controllerObj = self::getControllerInstance($controllerName);
+        
+        // Uruchamiamy akcję i przekazujemy parametr (np. 'easy')
+        $controllerObj->$action($id);
+    } else {
+        include 'public/views/404.html';
+    }
+}
 }

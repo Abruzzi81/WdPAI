@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pl">
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title><?= $title; ?></title>
+</head>
+<body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
+
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+
+        <main class="game-control">
+            <div class="game-status-bar">
+                <div class="status-item timer-box">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                    <span>CZAS: <strong id="countdown">30</strong>s</span>
+                </div>
+                <div class="status-item level-badge">
+                    <span>SEKTOR: <strong><?= $level ?></strong></span>
+                </div>
+                <div class="status-item score-box">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>POPRAWNE: <strong id="score-counter">0</strong></span>
+                </div>
+            </div>
+
+            <div class="math-core-panel">
+                <div class="core-glow"></div>
+                <span class="panel-subtitle">ZASILANIE HIPERNAPĘDU: WYMNÓŻ KOD</span>
+                
+                <div class="equation-display">
+                    <span id="num1"><?= $number1 ?></span>
+                    <span class="operator"><i class="fa-solid fa-xmark"></i></span>
+                    <span id="num2"><?= $number2 ?></span>
+                </div>
+
+                <form id="answer-form" autocomplete="off" onsubmit="event.preventDefault();">
+                    <div class="input-wrapper">
+                        <input type="number" id="user-answer" placeholder="?" autofocus required />
+                    </div>
+                    <button type="submit" class="submit-btn">WPROWADŹ WYNIK</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let timeLeft = 30;
+        const timerElement = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            timeLeft--;
+            timerElement.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                alert('Koniec czasu! Twój wynik to: ' + document.getElementById('score-counter').innerText);
+                window.location.href = '/training';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
