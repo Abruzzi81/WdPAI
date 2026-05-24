@@ -65,7 +65,7 @@ main {
     position: fixed;
     top: 60px; /* Dostosuj do wysokości swojego headera */
     left: 0;
-    width: 250px;
+    width: 210px;
     height: calc(100vh - 60px); 
     background-color: #101126;  
     box-sizing: border-box;

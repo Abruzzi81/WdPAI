@@ -14,7 +14,7 @@
             <div class="game-status-bar">
                 <div class="status-item timer-box">
                     <i class="fa-solid fa-hourglass-half"></i>
-                    <span>CZAS: <strong id="countdown">120</strong>s</span>
+                    <span>CZAS: <strong id="countdown">100</strong>s</span>
                 </div>
                 <div class="status-item level-badge">
                     <span>SEKTOR: <strong><?= $level ?></strong></span>
@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="math-core-panel">
+            <div class="math-core-panel" id="game-container" data-level="<?= strtolower($level) ?>">
                 <div class="core-glow"></div>
                 <span class="panel-subtitle">ZASILANIE HIPERNAPĘDU: WYMNÓŻ KOD</span>
                 

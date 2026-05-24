@@ -1,6 +1,5 @@
 // public/js/game.js
 
-// Czekamy na pełne załadowanie struktury DOM, aby bezpiecznie pobrać elementy HTML
 document.addEventListener("DOMContentLoaded", () => {
 
     // 1. POBIERANIE ELEMENTÓW Z DRZEWA DOM
@@ -21,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Odczytujemy poziom trudności z atrybutu "data-level" (domyślnie ustawiamy 'easy')
     const currentLevel = gameContainer ? gameContainer.getAttribute('data-level') : 'easy';
 
-    // Konfiguracja startowa parametrów gry
-    let timeLeft = 120; // Czas gry zmieniony na 120 sekund
+    // Konfiguracja startowa parametrów gry (ustawione na 100 sekund)
+    let timeLeft = 100; 
     let score = 0;
 
     // 2. FUNKCJA DYNAMICZNEGO GENEROWANIA LICZB DLA POZIOMÓW
@@ -39,11 +38,11 @@ document.addEventListener("DOMContentLoaded", () => {
             min = 1;
             max = 10;
         } else if (level === 'legendary') {
-            min = 2;
+            min = 1;
             max = 15;
         }
 
-        // Profesjonalny wzór na losowanie liczb całkowitych w przedziale obustronnie domkniętym [min, max]
+        // Wzór na losowanie liczb całkowitych w przedziale obustronnie domkniętym [min, max]
         const n1 = Math.floor(Math.random() * (max - min + 1)) + min;
         const n2 = Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -104,9 +103,43 @@ document.addEventListener("DOMContentLoaded", () => {
         userAnswerInput.value = '';
         userAnswerInput.focus();
 
-        // Po upływie 300 milisekund wygaszamy neonowy błysk (zielony/różowy) i wracamy do stylu bazowego
+        // Po upływie 300 milisekund wygaszamy neonowy błysk i wracamy do stylu bazowego
         setTimeout(() => {
             userAnswerInput.style.borderColor = '';
         }, 300);
+    });
+
+    // 6. STRAŻNIK ODŚWIEŻENIA / ZAMKNIĘCIA KARTY PRZEGLĄDARKI (F5 / Krzyżyk)
+    window.addEventListener('beforeunload', function (event) {
+        if (timeLeft > 0) {
+            event.preventDefault();
+            event.returnValue = 'Czy na pewno chcesz przerwać misję?';
+            return event.returnValue;
+        }
+    });
+
+    // 7. PEWNY STRAŻNIK DLA LINKÓW NAWIGACJI BOCZNEJ
+    // Szukamy linków wewnątrz tagu <nav> oraz wewnątrz klas związanych z sidebarami, aby mieć 100% pewności trafienia
+    const sidebarLinks = document.querySelectorAll('nav a, .sidebar a, aside a');
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            const hrefAttr = this.getAttribute('href') || '';
+            
+            // Reagujemy tylko wtedy, gdy gra trwa i gracz nie klika w "Wyloguj"
+            if (timeLeft > 0 && !hrefAttr.includes('logout')) {
+
+                // Wyświetlamy okienko potwierdzenia
+                const confirmLeave = confirm("CZY CHCESZ PRZERWAĆ MISJĘ?\nTwój obecny postęp w tym sektorze zostanie utracony.");
+
+                if (!confirmLeave) {
+                    // Gracz zostaje w grze – blokujemy domyślną akcję linku
+                    event.preventDefault();
+                } else {
+                    // Gracz świadomie ucieka – wyłączamy timer, by w tle nie wyskoczył alert o końcu czasu
+                    clearInterval(countdownInterval);
+                }
+            }
+        });
     });
 });
