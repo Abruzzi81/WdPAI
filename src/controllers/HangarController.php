@@ -17,7 +17,7 @@ class HangarController extends AppController
         $avatars = $hangarRepo->getAllAvatars($userId);
 
         return $this->render('hangar', [
-            'title' => 'GALACTIC HANGAR - PERSONALIZACJA',
+            'title' => 'Galactic Hangar',
             'avatars' => $avatars
         ]);
     }

@@ -20,7 +20,7 @@ class TrainingController extends AppController
 
         // Renderowanie zaktualizowanego widoku wyboru misji
         return $this->render("training", [
-            "title" => "SYMULATOR TRENINGOWY",
+            "title" => "Galactic Training",
             "difficultyLevels" => $difficultyLevels
         ]);
     }
@@ -100,7 +100,7 @@ class TrainingController extends AppController
                 // Zapisujemy zmiany w bazie danych
                 $levelId = $levelData ? (int) $levelData['id'] : 1; // Pobieramy ID z odszukanego poziomu
                 $trainingRepo->addTrainingRewards($userId, $earnedStarDust, $earnedExp, $levelId, $score);
-                
+
                 // 3. Zwracamy obiekt dokładnie dopasowany pod oczekiwania Twojego JS
                 echo json_encode([
                     'status' => 'success',

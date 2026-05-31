@@ -39,7 +39,7 @@ class ProfileController extends AppController
         $totalTrainings = $usersRepo->getTotalTrainingsCount($userId);
 
         // Tytuł karty przeglądarki dopasowany do nazwy kadeta
-        $title = "PROFIL KADETA - " . strtoupper($loggedPlayer['username']);
+        $title = "Profil kadeta - " . strtoupper($loggedPlayer['username']);
 
         // 4. Renderujemy widok profilu wstrzykując KOMPLET zmiennych (teraz $totalTrainings bez problemu dotrze do HTML)
         return $this->render("profile", [

@@ -15,7 +15,7 @@ class MissionController extends AppController
         $levels = $missionRepo->getMissionLevelsForUser($userId);
 
         return $this->render('mission', [
-            'title' => 'GALACTIC MISSIONS - SEKTORY',
+            'title' => 'Galactic Missions',
             'levels' => $levels
         ]);
     }
