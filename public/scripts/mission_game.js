@@ -11,13 +11,13 @@ let currentTargetAnswer = 0;
 // Czekamy na załadowanie struktury dokumentu przez przeglądarkę
 document.addEventListener("DOMContentLoaded", () => {
     const gameNode = document.getElementById('mission-game-node');
-    
+
     if (gameNode) {
         // Pobranie danych konfiguracyjnych przekazanych przez HTML data attributes
         levelId = parseInt(gameNode.getAttribute('data-id'));
         minNum = parseInt(gameNode.getAttribute('data-min'));
         maxNum = parseInt(gameNode.getAttribute('data-max'));
-        
+
         // Inicjalizacja pierwszego pytania misji
         generateMissionQuestion();
     }
@@ -41,7 +41,7 @@ function generateMissionQuestion() {
 
     document.getElementById('num1').innerText = factor1;
     document.getElementById('num2').innerText = factor2;
-    
+
     const inputField = document.getElementById('player-answer');
     if (inputField) {
         inputField.value = '';
@@ -50,7 +50,7 @@ function generateMissionQuestion() {
 }
 
 // Weryfikacja odpowiedzi gracza (globalna dla atrybutu onclick w HTML)
-window.checkAnswer = function() {
+window.checkAnswer = function () {
     const inputField = document.getElementById('player-answer');
     const playerAnswer = parseInt(inputField.value);
 
@@ -79,19 +79,20 @@ window.checkAnswer = function() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ level_id: levelId, status: 'victory' })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert(`MISJA ZAKOŃCZONA SUKCESEM!\nSystemy ustabilizowane. Otrzymujesz: ✨ ${data.reward} Gwiezdnego Pyłu!`);
-            } else {
-                alert("Misja ukończona, ale system sieciowy Akademii nie zapisał nagrody.");
-            }
-            window.location.href = "/mission";
-        })
-        .catch(err => {
-            console.error("Mission Save Error:", err);
-            window.location.href = "/mission";
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Zaktualizowany komunikat dla gracza z uwzględnieniem EXP
+                    alert(`MISJA ZAKOŃCZONA SUKCESEM!\n\nSystemy ustabilizowane.\nZdobywasz:\n✨ ${data.reward} Gwiezdnego Pyłu\n🛡️ +${data.exp_reward} EXP!`);
+                } else {
+                    alert("Misja ukończona, ale system sieciowy Akademii nie zapisał nagrody.");
+                }
+                window.location.href = "/mission";
+            })
+            .catch(err => {
+                console.error("Mission Save Error:", err);
+                window.location.href = "/mission";
+            });
         return;
     }
 

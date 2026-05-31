@@ -4,30 +4,30 @@ require_once 'Repository.php';
 
 class MissionRepository extends Repository
 {
-
     public function getMissionLevelsForUser(int $userId): array
     {
         $query = $this->database->connect()->prepare(
             "SELECT 
-            ml.id, 
-            ml.name, 
-            ml.difficulty, 
-            ml.min_number, 
-            ml.max_number,
-            ml.sequence_order,
-            ml.reward, -- Korzystamy wyłącznie z nowej kolumny nagrody
-            CASE WHEN um.level_id IS NOT NULL THEN 'completed'
-                 WHEN ml.sequence_order = 1 THEN 'active'
-                 WHEN EXISTS (
-                     SELECT 1 FROM user_missions um2
-                     JOIN mission_levels ml2 ON um2.level_id = ml2.id
-                     WHERE um2.user_id = :user_id AND ml2.sequence_order = ml.sequence_order - 1
-                 ) THEN 'active'
-                 ELSE 'locked'
-            END as status
-         FROM mission_levels ml
-         LEFT JOIN user_missions um ON ml.id = um.level_id AND um.user_id = :user_id
-         ORDER BY ml.sequence_order ASC;"
+                ml.id, 
+                ml.name, 
+                ml.difficulty, 
+                ml.min_number, 
+                ml.max_number,
+                ml.sequence_order,
+                ml.reward,
+                ml.exp_reward, -- NOWOŚĆ: Pobieramy punkty EXP z bazy, aby widok mógł je wyświetlić
+                CASE WHEN um.level_id IS NOT NULL THEN 'completed'
+                     WHEN ml.sequence_order = 1 THEN 'active'
+                     WHEN EXISTS (
+                         SELECT 1 FROM user_missions um2
+                         JOIN mission_levels ml2 ON um2.level_id = ml2.id
+                         WHERE um2.user_id = :user_id AND ml2.sequence_order = ml.sequence_order - 1
+                     ) THEN 'active'
+                     ELSE 'locked'
+                END as status
+             FROM mission_levels ml
+             LEFT JOIN user_missions um ON ml.id = um.level_id AND um.user_id = :user_id
+             ORDER BY ml.sequence_order ASC;"
         );
 
         $query->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -42,15 +42,23 @@ class MissionRepository extends Repository
         return $query->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 
-    public function completeMission(int $userId, int $levelId, int $reward): void
+    public function completeMission(int $userId, int $levelId, int $reward, int $expReward): void
     {
         $db = $this->database->connect();
         try {
             $db->beginTransaction();
 
-            $queryReward = $db->prepare("UPDATE user_details SET star_dust = star_dust + ? WHERE user_id = ?;");
-            $queryReward->execute([$reward, $userId]);
+            // 1. Dodajemy zasoby (walutę oraz EXP) do profilu gracza
+            // W tym momencie PostgreSQL automatycznie odpali Twój trigger i sam ustawi prawidłowe rank_id!
+            $queryReward = $db->prepare(
+                "UPDATE user_details 
+                 SET star_dust = star_dust + ?, 
+                     exp = exp + ? 
+                 WHERE user_id = ?;"
+            );
+            $queryReward->execute([$reward, $expReward, $userId]);
 
+            // 2. Odblokowujemy kolejny sektor na mapie misji
             $queryProgress = $db->prepare(
                 "INSERT INTO user_missions (user_id, level_id) VALUES (?, ?) 
                  ON CONFLICT (user_id, level_id) DO NOTHING;"
