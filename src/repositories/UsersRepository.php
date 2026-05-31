@@ -4,13 +4,10 @@ require_once 'Repository.php';
 
 class UsersRepository extends Repository
 {
-
     public function getUsers(): ?array
     {
         $query = $this->database->connect()->prepare(
-            "
-            SELECT * FROM users;
-            "
+            "SELECT * FROM users;"
         );
         $query->execute();
 
@@ -21,9 +18,7 @@ class UsersRepository extends Repository
     public function getUserByEmail(string $email)
     {
         $query = $this->database->connect()->prepare(
-            "
-            SELECT * FROM users WHERE email = :email
-            "
+            "SELECT * FROM users WHERE email = :email"
         );
         $query->bindParam(':email', $email);
         $query->execute();
@@ -42,10 +37,8 @@ class UsersRepository extends Repository
 
         // 1. KROK: Wstawiamy dane do tabeli 'users'
         $query1 = $db->prepare(
-            "
-            INSERT INTO users (username, email, password)
-            VALUES (?, ?, ?) RETURNING id;
-            "
+            "INSERT INTO users (username, email, password)
+             VALUES (?, ?, ?) RETURNING id;"
         );
 
         $query1->execute([
@@ -58,13 +51,9 @@ class UsersRepository extends Repository
         $newUserId = $user['id'];
 
         // 2. KROK: Automatycznie tworzymy powiązany rekord w 'user_details'
-        // Nowy gracz domyślnie otrzymuje 0 Gwiezdnego Pyłu (star_dust), 0 EXP, 
-        // domyślny awatar o ID = 1 oraz brak rangi na starcie (null)
         $query2 = $db->prepare(
-            "
-            INSERT INTO user_details (user_id, star_dust, exp, rank_id, current_avatar_id)
-            VALUES (?, ?, ?, ?, ?);
-            "
+            "INSERT INTO user_details (user_id, star_dust, exp, rank_id, current_avatar_id)
+             VALUES (?, ?, ?, ?, ?);"
         );
 
         $query2->execute([
@@ -72,13 +61,16 @@ class UsersRepository extends Repository
             0,      // star_dust
             0,      // exp
             null,   // rank_id
-            1       // current_avatar_id (domyślny avatar_cadet.png z tabeli avatars)
+            1       // current_avatar_id (domyślny avatar_cadet.png)
         ]);
     }
 
+    /**
+     * Zwraca pełne, szczegółowe dane profilowe użytkownika (statystyki, ranga, awatar)
+     * Obsługuje zarówno widoki gry, jak i panel profilu gracza.
+     */
     public function getUserDetails(int $userId): ?array
     {
-        // Zaktualizowane zapytanie z LEFT JOIN do tabeli avatars
         $query = $this->database->connect()->prepare(
             "SELECT 
                 u.id, 
@@ -103,24 +95,35 @@ class UsersRepository extends Repository
         return $result ? $result : null;
     }
 
-    public function addTrainingReward(int $userId, int $score, string $level): int
+    /**
+     * NOWOŚĆ (z ProfileRepository): Pobiera historię treningów użytkownika z bazy danych
+     * Wykorzystuje zaktualizowaną nazwę tabeli 'training_levels'
+     */
+    public function getTrainingHistory(int $userId): array
     {
-        $db = $this->database->connect();
-
-        // 1. Wywołujemy funkcję SQL pobierającą mnożnik z tabeli słownikowej
-        $queryReward = $db->prepare("SELECT fn_calculate_reward(?, ?) AS computed_reward;");
-        $queryReward->execute([$score, $level]);
-        $rewardData = $queryReward->fetch(PDO::FETCH_ASSOC);
-        $calculatedReward = (int) $rewardData['computed_reward'];
-
-        // 2. Dodajemy obliczoną nagrodę bezpośrednio do profilu gracza w user_details
-        $queryUpdate = $db->prepare(
-            "UPDATE user_details 
-             SET star_dust = star_dust + ? 
-             WHERE user_id = ?;"
+        $query = $this->database->connect()->prepare(
+            "SELECT 
+                th.score, 
+                th.completed_at, 
+                tl.name AS level_name
+             FROM training_history th
+             JOIN training_levels tl ON th.level_id = tl.id
+             WHERE th.user_id = ?
+             ORDER BY th.completed_at DESC
+             LIMIT 10;" // Zwraca 10 ostatnich wpisów historycznych
         );
-        $queryUpdate->execute([$calculatedReward, $userId]);
+        $query->execute([$userId]);
+        return $query->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
 
-        return $calculatedReward;
+    public function getTotalTrainingsCount(int $userId): int
+    {
+        $query = $this->database->connect()->prepare(
+            "SELECT COUNT(*) AS total FROM training_history WHERE user_id = ?;"
+        );
+        $query->execute([$userId]);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return $result ? (int) $result['total'] : 0;
     }
 }

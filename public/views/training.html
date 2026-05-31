@@ -1,11 +1,9 @@
-<!DOCTYPEdoctype html>
+<!doctype html>
 <html lang="pl">
 
 <head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-    <title>
-        <?= $title; ?>
-    </title>
+    <title><?= $title; ?></title>
 </head>
 
 <body>
@@ -18,75 +16,58 @@
             <div class="page-layout">
 
                 <header class="training-header">
-                    <h1 class="training-title">Wybierz Misję</h1>
+                    <h1 class="training-title">Wybierz Trening</h1>
                     <p class="training-description">
                         Wybierz poziom trudności dla swojej eksploracji matematycznej. Każdy poziom trudności zapewnia
-                        większe nagrody w postaci Gwiezdnego Pyłu.
+                        większe nagrody w postaci Gwiezdnego Pyłu oraz punktów EXP.
                     </p>
                 </header>
 
                 <section class="page-main-content">
                     <div class="trainings-grid">
 
-                        <a href="training/easy" class="training-card card--easy">
-                            <div class="training-card__icon">
-                                <i class="fa-solid fa-leaf"></i>
-                            </div>
-                            <div class="training-card__content">
-                                <h3 class="training-card__title">ŁATWY</h3>
-                                <div>
-                                    <p class="training-card__description">
-                                        Lot o niskiej grawitacji. Idealny dla nowych kadetów opanowujących podstawy.
-                                    </p>
-                                </div>
-                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value">1.0x</span></p>
-                            </div>
-                        </a>
+                        <?php if(isset($difficultyLevels) && is_array($difficultyLevels)): ?>
+                            <?php foreach($difficultyLevels as $level): ?>
+                                <?php 
+                                    // Ikony i kolory kart wciąż możemy mapować na podstawie nazwy poziomu
+                                    $cardClass = 'card--easy';
+                                    $iconClass = 'fa-leaf';
 
-                        <a href="training/normal" class="training-card card--medium">
-                            <div class="training-card__icon">
-                                <i class="fa-solid fa-plane"></i>
-                            </div>
-                            <div class="training-card__content">
-                                <h3 class="training-card__title">NORMALNY</h3>
-                                <div>
-                                    <p class="training-card__description">
-                                        Standardowa orbita. Zrównoważone wyzwanie dla aktywnych odkrywców.
-                                    </p>
-                                </div>
-                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value">1.5x</span></p>
-                            </div>
-                        </a>
+                                    switch(strtolower($level['name'])) {
+                                        case 'easy':
+                                            $cardClass = 'card--easy'; $iconClass = 'fa-leaf'; break;
+                                        case 'normal':
+                                            $cardClass = 'card--medium'; $iconClass = 'fa-plane'; break;
+                                        case 'hard':
+                                            $cardClass = 'card--hard'; $iconClass = 'fa-gauge-simple-high'; break;
+                                        case 'legendary':
+                                            $cardClass = 'card--legendary'; $iconClass = 'fa-dragon'; break;
+                                    }
+                                ?>
 
-                        <a href="training/hard" class="training-card card--hard">
-                            <div class="training-card__icon">
-                                <i class="fa-solid fa-gauge-simple-high"></i>
-                            </div>
-                            <div class="training-card__content">
-                                <h3 class="training-card__title">TRUDNY</h3>
-                                <div>
-                                    <p class="training-card__description">
-                                        Prędkości hipernapędu. Przetestuj granice swoich możliwości obliczeniowych.
-                                    </p>
-                                </div>
-                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value">2.5x</span></p>
-                            </div>
-                        </a>
+                                <a href="/training/<?= $level['id']; ?>" class="training-card <?= $cardClass; ?>">
+                                    <div class="training-card__icon">
+                                        <i class="fa-solid <?= $iconClass; ?>"></i>
+                                    </div>
+                                    <div class="training-card__content">
+                                        <h3 class="training-card__title"><?= strtoupper($level['name']); ?></h3>
+                                        <div>
+                                            <p class="training-card__description">
+                                                <?= htmlspecialchars($level['description'] ?? 'Brak opisu operacyjnego sektora.'); ?>
+                                            </p>
+                                        </div>
+                                        <p class="training-card__bonus">
+                                            Bonus Gwiezdnego pyłu: <span class="bonus-value"><?= number_format($level['multiplier'], 1); ?>x</span>
+                                        </p>
+                                    </div>
+                                </a>
 
-                        <a href="training/legendary" class="training-card card--legendary">
-                            <div class="training-card__icon">
-                                <i class="fa-solid fa-dragon"></i>
-                            </div>
-                            <div class="training-card__content">
-                                <h3 class="training-card__title">LEGENDARNY</h3>
-                                <div>
-                                    <p class="training-card__description">
-                                        Intensywność czarnej dziury. Tylko dla elity matematycznych komandosów.
-                                    </p>
-                                </div>
-                                <p class="training-card__bonus">Bonus Gwiezdnego pyłu: <span class="bonus-value">5.0x</span></p>
-                            </div>
-                        </a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="training-card__description" style="grid-column: 1/-1; text-align: center;">
+                                Nie można załadować modułów symulatora z tabeli difficulty_levels.
+                            </p>
+                        <?php endif; ?>
 
                     </div>
                 </section>

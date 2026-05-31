@@ -5,6 +5,7 @@
     <?php include __DIR__ . '/partials/head.html'; ?>
     <title><?= $title; ?></title>
     <link rel="stylesheet" type="text/css" href="/public/css/hangar.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/hangar-dynamic.css">
 </head>
 
 <body>
@@ -79,8 +80,8 @@
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <div class="no-items-message" style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 40px;">
-                                        <i class="fa-solid fa-shuttle-space" style="font-size: 2.5rem; margin-bottom: 15px; color: #ec4899; display: block;"></i>
+                                    <div class="no-items-message">
+                                        <i class="fa-solid fa-shuttle-space"></i>
                                         <p>Brak dostępnych modułów tożsamości w sieci handlowej Akademii.</p>
                                     </div>
                                 <?php endif; ?>
@@ -98,7 +99,7 @@
         </main>
     </div>
     
-    <script src="../public/scripts/hangar.js"></script>
+    <script src="/public/scripts/hangar.js"></script>
 </body>
 
 </html>

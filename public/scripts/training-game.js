@@ -1,5 +1,3 @@
-// public/js/game.js
-
 document.addEventListener("DOMContentLoaded", () => {
 
     // 1. POBIERANIE ELEMENTÓW Z DRZEWA DOM
@@ -28,24 +26,16 @@ document.addEventListener("DOMContentLoaded", () => {
     initNextQuestion();
 
     // 2. FUNKCJA DYNAMICZNEGO GENEROWANIA LICZB DLA POZIOMÓW
-    function generateNumbers(level) {
-        let min = 2, max = 9; // Zakres domyślny
+    function generateNumbers() {
+        // Pobieramy wartości bezpośrednio z atrybutów HTML wstrzykniętych przez PHP
+        const minAttr = gameContainer.getAttribute('data-min');
+        const maxAttr = gameContainer.getAttribute('data-max');
 
-        if (level === 'easy') {
-            min = 1;
-            max = 5;
-        } else if (level === 'normal') {
-            min = 1;
-            max = 7;
-        } else if (level === 'hard') {
-            min = 1;
-            max = 10;
-        } else if (level === 'legendary') {
-            min = 1;
-            max = 15;
-        }
+        // Konwertujemy na liczby
+        const min = parseInt(minAttr, 10);
+        const max = parseInt(maxAttr, 10);
 
-        // Wzór na losowanie liczb całkowitych w przedziale obustronnie domkniętym [min, max]
+        // Losowanie liczb w przedziale obustronnie domkniętym [min, max]
         const n1 = Math.floor(Math.random() * (max - min + 1)) + min;
         const n2 = Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -53,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initNextQuestion() {
-        const { n1, n2 } = generateNumbers(currentLevel);
+        const { n1, n2 } = generateNumbers();
         num1Element.innerText = n1;
         num2Element.innerText = n2;
     }
@@ -72,8 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Zerujemy zmienną, aby wyłączyć strażników przedwczesnego opuszczenia strony
             timeLeft = 0;
 
-            // Przygotowanie paczki danych JSON dla PHP
+            // Przygotowanie paczki danych JSON dla PHP (status 'victory' oznacza ukończenie 100s czasu)
             const payload = {
+                status: 'victory',
                 score: score,
                 level: currentLevel
             };
@@ -81,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Blokujemy formularz, by użytkownik nic już nie wpisał
             userAnswerInput.disabled = true;
 
-            // Wysłanie wyników za pomocą Fetch API
+            // Wysłanie wyników za pomocą Fetch API do nowego kontrolera treningu
             fetch('/save-training', {
                 method: 'POST',
                 headers: {
@@ -97,23 +88,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .then(data => {
                     if (data.status === 'success') {
-                        // Płynna zamiana reaktora na ekran podsumowania misji
+                        // Płynna zamiana reaktora na dynamiczny ekran podsumowania z uwzględnieniem EXP
                         gameContainer.innerHTML = `
-            <div class="summary-container" style="text-align: center; padding: 20px; color: white; background: rgba(15, 23, 42, 0.9); border: 2px solid #ec4899; border-radius: 16px; width: calc(100%); max-width: 420px; box-shadow: 0 0 25px rgba(236, 72, 153, 0.4); box-sizing: border-box;">
-                <h2 style="color: #ec4899; font-size: 1.8rem; margin-bottom: 15px; letter-spacing: 2px;">MISJA ZAKOŃCZONA</h2>
-                
-                <div style="margin: 25px 0; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    <p style="font-size: 1.2rem; margin: 8px 0;">Rozwiązane równania: <strong style="color: #a3e635;">${data.score}</strong></p>
-                    <p style="font-size: 1.2rem; margin: 8px 0;">Zdobyty gwiezdny pył: <strong style="color: #fbbf24;"> +${data.earned_star_dust}</strong></p>
-                </div>
+                            <div class="summary-container" style="text-align: center; padding: 20px; color: white; background: rgba(15, 23, 42, 0.9); border: 2px solid #ec4899; border-radius: 16px; width: calc(100%); max-width: 420px; box-shadow: 0 0 25px rgba(236, 72, 153, 0.4); box-sizing: border-box;">
+                                <h2 style="color: #ec4899; font-size: 1.8rem; margin-bottom: 15px; letter-spacing: 2px;">MISJA ZAKOŃCZONA</h2>
+                                
+                                <div style="margin: 25px 0; background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                                    <p style="font-size: 1.2rem; margin: 8px 0;">Rozwiązane równania: <strong style="color: #a3e635;">${data.score}</strong></p>
+                                    <p style="font-size: 1.2rem; margin: 8px 0;">Zdobyty gwiezdny pył: <strong style="color: #fbbf24;"> +${data.earned_star_dust}</strong></p>
+                                    <p style="font-size: 1.2rem; margin: 8px 0;">Zdobyte doświadczenie: <strong style="color: #a3e635;"> +${data.earned_exp}</strong></p>
+                                </div>
 
-                <a href="/training" class="btn-back" style="display: inline-block; background: #ec4899; color: white; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);">
-                    POWRÓT DO CENTRUM DOWODZENIA
-                </a>
-            </div>
-        `;
+                                <a href="/training" class="btn-back" style="display: inline-block; background: #ec4899; color: white; padding: 10px 25px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 0.9rem; transition: all 0.3s; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);">
+                                    POWRÓT DO CENTRUM DOWODZENIA
+                                </a>
+                            </div>
+                        `;
 
-                        // Aktualizacja licznika pyłu w nagłówku w locie (bez przeładowania)
+                        // Aktualizacja licznika pyłu w nagłówku w locie (bez przeładowania strony)
                         const headerStarDust = document.querySelector('.stat-pill span');
                         if (headerStarDust) {
                             const currentDust = parseInt(headerStarDust.innerText.replace(/[^0-9]/g, ''), 10) || 0;
@@ -136,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Blokujemy domyślne przeładowanie strony przez przeglądarkę
         event.preventDefault();
 
-        // Pobieramy aktualne liczby wyświetlane na ekranie (usuwamy spacje za pomocą trim)
+        // Pobieramy aktualne liczby wyświetlane na ekranie
         const number1 = parseInt(num1Element.innerText.trim(), 10);
         const number2 = parseInt(num2Element.innerText.trim(), 10);
 

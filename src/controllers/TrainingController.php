@@ -1,6 +1,7 @@
 <?php
 
 require_once 'AppController.php';
+require_once __DIR__ . '/../repositories/TrainingRepository.php';
 
 class TrainingController extends AppController
 {
@@ -13,93 +14,111 @@ class TrainingController extends AppController
         // Zabezpieczenie: tylko zalogowani gracze mają wstęp do akademii
         $this->requireLogin();
 
-        $title = "Galactic Math Explorer - Akademia";
+        $trainingRepo = new TrainingRepository();
+        // Pobieramy dynamiczne poziomy z tabeli difficulty_levels
+        $difficultyLevels = $trainingRepo->getDifficultyLevels();
 
-        // Dane o zadaniach przekazywane do widoku wyboru poziomu
-        $exercises = [
-            ["id" => 1, "category" => "Dodawanie wektorów", "reward" => "200 Star Dust", "difficulty" => "Easy"],
-            ["id" => 2, "category" => "Kalkulacja trajektorii", "reward" => "450 Star Dust", "difficulty" => "Medium"],
-            ["id" => 3, "category" => "Anomalie kwantowe (Dzielenie)", "reward" => "900 Star Dust", "difficulty" => "Hard"]
-        ];
-
-        // Renderowanie widoku wyboru misji (training.php)
+        // Renderowanie zaktualizowanego widoku wyboru misji
         return $this->render("training", [
-            "title" => $title,
-            "exercises" => $exercises
+            "title" => "SYMULATOR TRENINGOWY",
+            "difficultyLevels" => $difficultyLevels
         ]);
     }
 
     /**
      * Widok samej rozgrywki matematycznej
-     * Ścieżka: /training/easy, /training/hard itp.
-     * * @param string $id Poziom trudności wycięty przez Router z adresu URL
+     * Ścieżka: /training/{id}
+     * @param int $id ID poziomu trudności z bazy danych
      */
     public function game($id)
     {
         $this->requireLogin();
-        $title = "OPERACJA: MNOŻENIE";
 
-        $level = strtolower($id);
-        $min = 2;
-        $max = 9;
+        $levelId = (int) $id;
 
-        if ($level === 'easy') {
-            $min = 1;
-            $max = 5;
-        } elseif ($level === 'normal') {
-            $min = 1;
-            $max = 7;
-        } elseif ($level === 'hard') {
-            $min = 1;
-            $max = 10;
-        } elseif ($level === 'legendary') {
-            $min = 1;
-            $max = 15;
+        $trainingRepo = new TrainingRepository();
+        $level = $trainingRepo->getDifficultyLevelDetails($levelId);
+
+        // Jeśli poziom o danym ID nie istnieje w bazie, wracamy do wyboru treningów
+        if (!$level) {
+            header('Location: /training');
+            exit();
         }
 
+        // Dynamicznie pobieramy zakresy losowania bezpośrednio z bazy danych!
+        $min = (int) $level['min_number'];
+        $max = (int) $level['max_number'];
+
+        // POPRAWKA: Przekazujemy klucze "min" oraz "max" do tablicy widoku!
         return $this->render("training-game", [
-            "title" => $title,
-            "level" => strtoupper($id),
-            "number1" => rand($min, $max),
-            "number2" => rand($min, $max)
+            "title" => "OPERACJA: MNOŻENIE - " . strtoupper($level['name']),
+            "level" => strtoupper($level['name']),
+            "min" => $min,                 // <-- Zostanie wstrzyknięte do data-min
+            "max" => $max,                 // <-- Zostanie wstrzyknięte do data-max
+            "number1" => rand($min, $max), // Pierwsza losowa liczba startowa
+            "number2" => rand($min, $max)  // Druga losowa liczba startowa
         ]);
     }
 
-    public function saveTrainingResult() 
-{
-    // 1. Odbieramy surowe dane JSON wysłane za pomocą JavaScript Fetch API
-    $json = file_get_contents('php://input');
-    $data = json_decode($json, true);
+    /**
+     * Zapisywanie wyniku treningu po odebraniu żądania POST z JS Fetch API
+     * Ścieżka: /save-training
+     */
+    public function saveTrainingResult()
+    {
+        // 1. Odbieramy surowe dane JSON wysłane z game.js
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
 
-    // 2. Upewniamy się, że sesja jest uruchomiona
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-    // 3. Walidacja: Sprawdzamy czy gracz jest zalogowany i czy przesłał poprawne dane
-    if (!empty($_SESSION['user_id']) && isset($data['score']) && isset($data['level'])) {
-        $userId = $_SESSION['user_id'];
-        $score = (int)$data['score'];
-        $level = $data['level']; // np. 'easy', 'hard'
-
-        // 4. Wywołujemy repozytorium, które zaktualizuje bazę i zwróci obliczoną nagrodę
-        $userRepo = new UsersRepository();
-        $earnedStarDust = $userRepo->addTrainingReward($userId, $score, $level);
-
-        // 5. Odsyłamy do JavaScript odpowiedź w formacie JSON
         header('Content-Type: application/json');
-        echo json_encode([
-            'status' => 'success',
-            'score' => $score,
-            'earned_star_dust' => $earnedStarDust
-        ]);
+
+        // 2. Walidacja przesłanych pól
+        if (!empty($_SESSION['user_id']) && isset($data['score']) && isset($data['level'])) {
+            $userId = $_SESSION['user_id'];
+            $score = (int) $data['score'];
+            $difficultyName = $data['level']; // Odbieramy np. 'easy', 'normal'...
+
+            // Przeliczniki bazowe za JEDNĄ poprawną odpowiedź
+            $starDustPerAnswer = 2;
+            $expPerAnswer = 15; // Zmieniono na stałe 15 EXP za poprawną odp zgodnie z Twoim komentarzem
+
+            try {
+                $trainingRepo = new TrainingRepository();
+
+                // Pobieramy multiplier z tabeli difficulty_levels
+                $levelData = $trainingRepo->getDifficultyLevelByName($difficultyName);
+                $multiplier = $levelData ? (float) $levelData['multiplier'] : 1.0;
+
+                // Obliczamy nagrody końcowe: (ilość odp * stawka bazowa) * mnożnik poziomu
+                $earnedStarDust = (int) round(($score * $starDustPerAnswer) * $multiplier);
+                $earnedExp = (int) round(($score * $expPerAnswer) * $multiplier);
+
+                // Zapisujemy zmiany w bazie danych
+                $levelId = $levelData ? (int) $levelData['id'] : 1; // Pobieramy ID z odszukanego poziomu
+                $trainingRepo->addTrainingRewards($userId, $earnedStarDust, $earnedExp, $levelId, $score);
+                
+                // 3. Zwracamy obiekt dokładnie dopasowany pod oczekiwania Twojego JS
+                echo json_encode([
+                    'status' => 'success',
+                    'score' => $score,
+                    'earned_star_dust' => $earnedStarDust,
+                    'earned_exp' => $earnedExp
+                ]);
+                exit();
+
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['status' => 'error', 'message' => 'Awaria systemu zapisu akademii.']);
+                exit();
+            }
+        }
+
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Nieprawidłowy pakiet danych sieciowych.']);
         exit();
     }
-
-    // Jeśli coś poszło nie tak (np. brak autoryzacji)
-    header('Content-Type: application/json');
-    http_response_code(400);
-    echo json_encode(['status' => 'error', 'message' => 'Nieprawidłowe żądanie lub brak logowania']);
-    exit();
-}
 }
