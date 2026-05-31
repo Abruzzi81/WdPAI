@@ -2008,6 +2008,7 @@ main {
     font-size: 0.95rem;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
 }
 
 .input-field::placeholder {
@@ -2125,6 +2126,13 @@ main {
 
 .footer-right a:hover {
     color: #475569;
+}
+
+/* Reset ograniczenia z gry dla formularzy logowania/rejestracji */
+.login-input-wrapper {
+    width: 100%;
+    max-width: 100% !important; /* Nadpisuje 160px ustawione dla gry */
+    margin: 0;
 }
 
 /* #endregion */
