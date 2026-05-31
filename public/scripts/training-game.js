@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentLevel = gameContainer.getAttribute('data-level') || 'easy';
 
     // Konfiguracja startowa parametrów gry (ustawione na 100 sekund)
-    let timeLeft = 10;
+    let timeLeft = 100;
     let score = 0;
 
     // Generujemy pierwsze liczby na start gry
@@ -98,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     if (data.status === 'success') {
                         // Płynna zamiana reaktora na ekran podsumowania misji
-                        // POPRAWKA: Usunięto 'margin: 40px auto' i zmieniono szerokość
                         gameContainer.innerHTML = `
             <div class="summary-container" style="text-align: center; padding: 20px; color: white; background: rgba(15, 23, 42, 0.9); border: 2px solid #ec4899; border-radius: 16px; width: calc(100%); max-width: 420px; box-shadow: 0 0 25px rgba(236, 72, 153, 0.4); box-sizing: border-box;">
                 <h2 style="color: #ec4899; font-size: 1.8rem; margin-bottom: 15px; letter-spacing: 2px;">MISJA ZAKOŃCZONA</h2>

@@ -3,9 +3,7 @@
 
 <head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-    <title>
-        <?= $title; ?>
-    </title>
+    <title><?= $title; ?></title>
 </head>
 
 <body>
@@ -26,59 +24,64 @@
                 <section class="page-main-content">
                     <div class="space-map-timeline">
 
-                        <div class="map-stage stage--completed">
-                            <div class="map-node">
-                                <div class="node-planet"><i class="fa-solid fa-earth-europe"></i></div>
-                            </div>
-                            <div class="map-card">
-                                <span class="stage-status-badge">Ukończono</span>
-                                <h3 class="stage-title">Sektor 1: Alfa Centauri</h3>
-                                <p class="stage-desc">Nawiąż połączenie z uszkodzoną sondą badawczą.</p>
-                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 150</span></div>
-                                <button class="btn-stage btn--completed" disabled>Rozwiązane</button>
-                            </div>
-                        </div>
+                        <?php if(isset($levels) && is_array($levels)): ?>
+                            <?php foreach($levels as $lvl): ?>
+                                <?php 
+                                    // Mapowanie statusów z bazy na Twoje klasy CSS
+                                    $stageClass = 'stage--locked';
+                                    $badgeText = 'Zablokowane';
+                                    $btnText = 'Zablokowane';
+                                    $btnAttr = 'disabled';
 
-                        <div class="map-stage stage--active">
-                            <div class="map-node">
-                                <div class="node-planet"><i class="fa-solid fa-meteor"></i></div>
-                            </div>
-                            <div class="map-card">
-                                <span class="stage-status-badge">Aktualna Misja</span>
-                                <h3 class="stage-title">Sektor 2: Pas Asteroid</h3>
-                                <p class="stage-desc">Silnik traci stabilność. Rozwiąż zadania matematyczne.</p>
-                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 350</span></div>
-                                <button class="btn-stage btn--active">Rozpocznij <i
-                                        class="fa-solid fa-chevron-right"></i></button>
-                            </div>
-                        </div>
+                                    if ($lvl['status'] === 'completed') {
+                                        $stageClass = 'stage--completed';
+                                        $badgeText = 'Ukończono';
+                                        $btnText = 'Rozwiązane';
+                                        $btnAttr = 'disabled';
+                                    } elseif ($lvl['status'] === 'active') {
+                                        $stageClass = 'stage--active';
+                                        $badgeText = 'Aktualna Misja';
+                                        $btnText = 'Rozpocznij <i class="fa-solid fa-chevron-right"></i>';
+                                        $btnAttr = '';
+                                    }
 
-                        <div class="map-stage stage--locked">
-                            <div class="map-node">
-                                <div class="node-planet"><i class="fa-solid fa-shuttle-space"></i></div>
-                            </div>
-                            <div class="map-card">
-                                <span class="stage-status-badge">Zablokowane</span>
-                                <h3 class="stage-title">Sektor 3: Pierścienie Saturna</h3>
-                                <p class="stage-desc">Oblicz bezpieczną trajektorię przelotu przez lodowe odłamki.</p>
-                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 500</span></div>
-                                <button class="btn-stage btn--locked" disabled>Zablokowane</button>
-                            </div>
-                        </div>
+                                    // Dynamiczne dobieranie kosmicznych ikon dla urozmaicenia mapy
+                                    $icons = [1 => 'fa-earth-europe', 2 => 'fa-meteor', 3 => 'fa-shuttle-space', 4 => 'fa-circle-dot'];
+                                    $nodeIcon = $icons[$lvl['sequence_order']] ?? 'fa-rocket';
+                                ?>
 
-                        <div class="map-stage stage--locked">
-                            <div class="map-node">
-                                <div class="node-planet"><i class="fa-solid fa-circle-dot"></i></div>
+                                <div class="map-stage <?= $stageClass; ?>">
+                                    <div class="map-node">
+                                        <div class="node-planet">
+                                            <i class="fa-solid <?= $nodeIcon; ?>"></i>
+                                        </div>
+                                    </div>
+                                    <div class="map-card">
+                                        <span class="stage-status-badge">
+                                            <?= $badgeText; ?>
+                                        </span>
+                                        <h3 class="stage-title">
+                                            Sektor <?= $lvl['sequence_order']; ?>: <?= htmlspecialchars($lvl['name']); ?>
+                                        </h3>
+                                        <p class="stage-desc">
+                                            Zakres operacyjny: <?= $lvl['min_number']; ?> &times; <?= $lvl['max_number']; ?>
+                                        </p>
+                                        <div class="stage-reward">
+                                            Nagroda główna: <span class="reward-val">✨ <?= number_format($lvl['reward']); ?></span>
+                                        </div>
+
+                                        <button class="btn-stage btn--<?= $lvl['status']; ?>" <?= $btnAttr; ?> onclick="location.href='/mission/<?= $lvl['id']; ?>'">
+                                            <?= $btnText; ?>
+                                        </button>
+                                    </div>
+                                </div>
+
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="map-stage stage--locked" style="width: 100%; text-align: center; padding: 40px;">
+                                <p class="stage-desc">Nie udało się nawiązać połączenia z mapą sektorów.</p>
                             </div>
-                            <div class="map-card">
-                                <span class="stage-status-badge">Zablokowane</span>
-                                <h3 class="stage-title">Sektor 4: Horyzont Zdarzeń</h3>
-                                <p class="stage-desc">Ostateczne starcie z anomaliami grawitacyjnymi wokół czarnej
-                                    dziury.</p>
-                                <div class="stage-reward">Nagroda: <span class="reward-val">✨ 1,000</span></div>
-                                <button class="btn-stage btn--locked" disabled>Zablokowane</button>
-                            </div>
-                        </div>
+                        <?php endif; ?>
 
                     </div>
                 </section>

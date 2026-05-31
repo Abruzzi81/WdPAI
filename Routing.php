@@ -69,12 +69,22 @@ class Routing {
         $httpMethod = $_SERVER['REQUEST_METHOD'];
 
         // =================================================================
-        // NOWOŚĆ: Przechwycenie żądania POST z JavaScriptu (Zapis wyniku treningu)
+        // DYNAMICZNA OBSŁUGA ZAPYTAŃ ASYNCHRONICZNYCH (POST / FETCH API)
         // =================================================================
-        if ($path === 'save-training' && $httpMethod === 'POST') {
-            $path = 'save-training'; // Sztucznie utrzymujemy poprawny klucz, by przejść walidację
-            $customController = "TrainingController";
-            $customAction = "saveTrainingResult";
+        if ($httpMethod === 'POST') {
+            if ($path === 'save-training') {
+                $customController = "TrainingController";
+                $customAction = "saveTrainingResult";
+            } 
+            elseif ($path === 'equip-avatar') {
+                $customController = "HangarController";
+                $customAction = "equipAvatar";
+            }
+            // NOWOŚĆ: Obsługa asynchronicznego zapisu zakończonej sukcesem misji
+            elseif ($path === 'save-mission') {
+                $customController = "MissionController";
+                $customAction = "saveMissionResult";
+            }
         }
         // =================================================================
 
@@ -91,12 +101,19 @@ class Routing {
             $customAction = "game"; 
         }
 
-        // Jeśli to dynamiczna trasa 'save-training', wstrzykujemy ją tymczasowo do routingu
-        if ($path === 'save-training' && $customController !== null) {
+        // 3. REGEX - NOWOŚĆ: Obsługa wejścia do konkretnej misji (np. mission/1, mission/2)
+        if (preg_match('/^mission\/(\d+)$/', $path, $matches)) {
+            $path = 'mission';
+            $id = (int)$matches[1]; // Konwertujemy ID poziomu na liczbę
+            $customAction = "game"; // Nadpisujemy domyślną akcję na metodę urachamiającą grę misyjną
+        }
+
+        // Sprawdzamy, czy przypisaliśmy dynamiczny kontroler (dla naszych żądań POST)
+        if ($customController !== null) {
             $controllerName = $customController;
             $action = $customAction;
         } 
-        // W innym wypadku sprawdzamy standardową mapę tras $routes
+        // W innym wypadku sprawdzamy standardową mapę tras $routes (dla żądań GET)
         elseif (array_key_exists($path, self::$routes)) {
             $controllerName = self::$routes[$path]["controller"];
             $action = ($customAction !== null) ? $customAction : self::$routes[$path]["action"];
@@ -108,7 +125,7 @@ class Routing {
         // Wywołujemy kontroler przez mechanizm Singletona
         $controllerObj = self::getControllerInstance($controllerName);
         
-        // Uruchamiamy akcję i przekazujemy parametr (w przypadku save-training $id będzie wynosić null)
+        // Uruchamiamy akcję i przekazujemy parametr ($id jako parametr metody w kontrolerze)
         $controllerObj->$action($id);
     }
 }

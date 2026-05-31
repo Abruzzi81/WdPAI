@@ -3,9 +3,8 @@
 
 <head>
     <?php include __DIR__ . '/partials/head.html'; ?>
-    <title>
-        <?= $title; ?>
-    </title>
+    <title><?= $title; ?></title>
+    <link rel="stylesheet" type="text/css" href="/public/css/hangar.css">
 </head>
 
 <body>
@@ -19,109 +18,74 @@
 
                     <section class="hangar-preview-section">
                         <div class="astronaut-preview-card">
+                            <h3 class="section-title">TWÓJ PROFIL</h3>
                             <div class="preview-window">
-                                <i class="fa-solid fa-user-astronaut astronaut-character"></i>
-
-                                <div class="equipped-indicator slot--helmet" title="Wyposażony Hełm">
-                                    <i class="fa-solid fa-helmet-safety"></i>
-                                </div>
-                                <div class="equipped-indicator slot--suit" title="Wyposażony Kombinezon">
-                                    <i class="fa-solid fa-shirt"></i>
-                                </div>
-                                <div class="equipped-indicator slot--gloves" title="Wyposażone Rękawice">
-                                    <i class="fa-solid fa-hands"></i>
-                                </div>
-                                <div class="equipped-indicator slot--boots" title="Wyposażone Buty">
-                                    <i class="fa-solid fa-shoe-prints"></i>
-                                </div>
+                                <img src="/public/img/avatars/<?= $loggedPlayer['avatar_file'] ?? 'avatar_cadet.png'; ?>" 
+                                     class="current-avatar-display" 
+                                     id="current-avatar-img" 
+                                     alt="Current Avatar">
                             </div>
                             <div class="preview-footer">
-                                <span class="current-skin-name">Default Recruit Suit</span>
+                                <span class="current-skin-name" id="current-avatar-name">
+                                    <?= htmlspecialchars($loggedPlayer['avatar_name'] ?? 'Kadet Nowicjusz'); ?>
+                                </span>
                             </div>
                         </div>
                     </section>
 
                     <section class="hangar-shop-section">
-
                         <div class="skin-category">
-                            <h3 class="category-title"><i class="fa-solid fa-helmet-safety"></i> Hełmy</h3>
+                            <h3 class="category-title">
+                                <i class="fa-solid fa-user-gear text-pink"></i> DOSTĘPNE MODUŁY TOŻSAMOŚCI
+                            </h3>
+                            
                             <div class="skins-grid">
-                                <div class="skin-item item--active border-medium">
-                                    <div class="skin-icon"><i class="fa-solid fa-helmet-safety"></i></div>
-                                    <span class="skin-name">Recruit Helm</span>
-                                    <span class="skin-price">Equipped</span>
-                                </div>
-                                <div class="skin-item border-easy">
-                                    <div class="skin-icon"><i class="fa-solid fa-mask-ventilator"></i></div>
-                                    <span class="skin-name">Bio-Hazard</span>
-                                    <span class="skin-price">✨ 250</span>
-                                </div>
-                                <div class="skin-item border-hard">
-                                    <div class="skin-icon"><i class="fa-solid fa-brain"></i></div>
-                                    <span class="skin-name">Cerebral X</span>
-                                    <span class="skin-price">✨ 750</span>
-                                </div>
-                                <div class="skin-item border-eclipse">
-                                    <div class="skin-icon"><i class="fa-solid fa-crown"></i></div>
-                                    <span class="skin-name">Nova King</span>
-                                    <span class="skin-price">✨ 2,500</span>
-                                </div>
+                                <?php if(isset($avatars) && is_array($avatars) && !empty($avatars)): ?>
+                                    <?php foreach($avatars as $avatar): ?>
+                                        <?php 
+                                            // Dynamiczne sprawdzanie stanu i nadawanie odpowiednich klas CSS
+                                            $isEquipped = ($loggedPlayer['current_avatar_id'] == $avatar['id']);
+                                            $isOwned = $avatar['is_owned'] ?? false;
+                                            
+                                            $itemClass = '';
+                                            if ($isEquipped) $itemClass = 'item--active';
+                                            elseif (!$isOwned && $avatar['price'] > 0) $itemClass = 'item--locked';
+                                        ?>
+                                        
+                                        <div class="skin-item <?= $itemClass; ?>" 
+                                             data-id="<?= $avatar['id']; ?>" 
+                                             data-filename="<?= $avatar['image_filename']; ?>"
+                                             data-name="<?= htmlspecialchars($avatar['name']); ?>"
+                                             onclick="selectAvatar(this)">
+                                             
+                                            <div class="avatar-card-image">
+                                                <img src="/public/img/avatars/<?= $avatar['image_filename']; ?>" alt="<?= $avatar['name']; ?>">
+                                                <?php if(!$isOwned && $avatar['price'] > 0): ?>
+                                                    <div class="lock-overlay"><i class="fa-solid fa-lock"></i></div>
+                                                <?php endif; ?>
+                                            </div>
+                                            
+                                            <span class="skin-name"><?= htmlspecialchars($avatar['name']); ?></span>
+                                            
+                                            <span class="skin-price">
+                                                <?php if($isEquipped): ?>
+                                                    <strong class="text-green">AKTYWNY</strong>
+                                                <?php elseif($isOwned || $avatar['price'] == 0): ?>
+                                                    <span class="text-blue">POSIADANY</span>
+                                                <?php else: ?>
+                                                    ✨ <?= number_format($avatar['price']); ?>
+                                                <?php endif; ?>
+                                            </span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="no-items-message" style="grid-column: 1/-1; text-align: center; color: #94a3b8; padding: 40px;">
+                                        <i class="fa-solid fa-shuttle-space" style="font-size: 2.5rem; margin-bottom: 15px; color: #ec4899; display: block;"></i>
+                                        <p>Brak dostępnych modułów tożsamości w sieci handlowej Akademii.</p>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
-
-                        <div class="skin-category">
-                            <h3 class="category-title"><i class="fa-solid fa-shirt text-hard"></i> Kostiumy</h3>
-                            <div class="skins-grid">
-                                <div class="skin-item item--active border-medium">
-                                    <div class="skin-icon"><i class="fa-solid fa-shirt"></i></div>
-                                    <span class="skin-name">Base Mesh</span>
-                                    <span class="skin-price">Equipped</span>
-                                </div>
-                                <div class="skin-item border-easy">
-                                    <div class="skin-icon"><i class="fa-solid fa-vest"></i></div>
-                                    <span class="skin-name">Scout Vest</span>
-                                    <span class="skin-price">✨ 500</span>
-                                </div>
-                                <div class="skin-item border-eclipse">
-                                    <div class="skin-icon"><i class="fa-solid fa-shield-cat"></i></div>
-                                    <span class="skin-name">Quantum Plating</span>
-                                    <span class="skin-price">✨ 5,000</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="skin-category">
-                            <h3 class="category-title"><i class="fa-solid fa-hands text-easy"></i> Rękawiczki</h3>
-                            <div class="skins-grid">
-                                <div class="skin-item item--active border-medium">
-                                    <div class="skin-icon"><i class="fa-solid fa-hands"></i></div>
-                                    <span class="skin-name">Cotton Pads</span>
-                                    <span class="skin-price">Equipped</span>
-                                </div>
-                                <div class="skin-item border-hard">
-                                    <div class="skin-icon"><i class="fa-solid fa-hand-fist"></i></div>
-                                    <span class="skin-name">Thermal Grip</span>
-                                    <span class="skin-price">✨ 400</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="skin-category">
-                            <h3 class="category-title"><i class="fa-solid fa-shoe-prints text-eclipse"></i> Buty</h3>
-                            <div class="skins-grid">
-                                <div class="skin-item item--active border-medium">
-                                    <div class="skin-icon"><i class="fa-solid fa-shoe-prints"></i></div>
-                                    <span class="skin-name">Mag-Boots v1</span>
-                                    <span class="skin-price">Equipped</span>
-                                </div>
-                                <div class="skin-item border-easy">
-                                    <div class="skin-icon"><i class="fa-solid fa-socks"></i></div>
-                                    <span class="skin-name">Gravity Defiers</span>
-                                    <span class="skin-price">✨ 800</span>
-                                </div>
-                            </div>
-                        </div>
-
                     </section>
 
                 </div>
@@ -133,6 +97,8 @@
             </div>
         </main>
     </div>
+    
+    <script src="../public/scripts/hangar.js"></script>
 </body>
 
 </html>

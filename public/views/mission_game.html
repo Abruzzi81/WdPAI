@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title><?= $title; ?></title>
+    <link rel="stylesheet" type="text/css" href="/public/css/mission_game.css">
+</head>
+
+<body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
+
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+        <main>
+            <div class="page-layout">
+
+                <div class="mission-game-container" 
+                     id="mission-game-node"
+                     data-id="<?= (int)$level['id']; ?>"
+                     data-min="<?= (int)$level['min_number']; ?>"
+                     data-max="<?= (int)$level['max_number']; ?>">
+                    
+                    <div class="game-card">
+                        <header class="game-card-header">
+                            <span class="mission-badge">Anomalia Matematyczna</span>
+                            <h2 class="game-mission-title" id="mission-name"><?= htmlspecialchars($level['name']); ?></h2>
+                        </header>
+
+                        <div class="game-stats-panel">
+                            <div class="stat-box">
+                                <span class="stat-label">Skaner Postępu:</span>
+                                <span class="stat-value val--progress" id="progress-text">0 / 20</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">Integralność Poszycia:</span>
+                                <span class="stat-value val--lives" id="lives-container">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <i class="fa-solid fa-heart"></i>
+                                    <i class="fa-solid fa-heart"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="math-display-window">
+                            <span class="math-factor" id="num1">0</span>
+                            <span class="math-operator">&times;</span>
+                            <span class="math-factor" id="num2">0</span>
+                            <span class="math-operator">=</span>
+                            <span class="math-question">?</span>
+                        </div>
+
+                        <div class="game-input-zone">
+                            <input type="number" id="player-answer" placeholder="Wprowadź wynik..." autofocus autocomplete="off">
+                            <button id="btn-submit-answer" onclick="checkAnswer()">
+                                ZATWIERDŹ <i class="fa-solid fa-bolt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Akademia Matematyczna. Wszystkie prawa zastrzeżone.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="/public/scripts/mission_game.js"></script>
+</body>
+
+</html>
