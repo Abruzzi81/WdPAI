@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+    <?php include __DIR__ . '/partials/head.html'; ?>
+    <title>
+        <?= $title ?? 'Zarządzanie Załogą'; ?>
+    </title>
+    <link rel="stylesheet" href="/public/css/admin_panel.css">
+</head>
+
+<body>
+    <?php include __DIR__ . '/partials/header.html'; ?>
+
+    <div class="layout">
+        <?php include __DIR__ . '/partials/nav.html'; ?>
+
+        <main>
+            <div class="page-layout">
+
+                <section class="page-main-content">
+
+                    <div class="admin-toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text" placeholder="Szukaj kadeta po nazwie lub emailu..." class="search-input">
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Kadet</th>
+                                    <th>Kosmiczne ID (Email)</th>
+                                    <th>Uprawnienia i Status</th>
+                                    <th>Gwiezdny Pył</th>
+                                    <th class="text-center">Akcje</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if(isset($users) && is_array($users)): ?>
+                                <?php foreach($users as $user): ?>
+                                <tr class="user-row">
+                                    <td>
+                                        <div class="user-info-cell">
+                                            <img src="/public/img/avatars/<?= !empty($user['avatar_file']) ? $user['avatar_file'] : 'avatar_cadet.png'; ?>"
+                                                alt="Avatar" class="table-avatar">
+                                            <span
+                                                class="user-name search-name <?= $user['role'] === 'admin' ? 'font-bold' : ''; ?>">
+                                                <?= htmlspecialchars($user['username']); ?>
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="search-email">
+                                        <?= htmlspecialchars($user['email']); ?>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="role-badge <?= $user['role'] === 'admin' ? 'badge--admin' : 'badge--user'; ?>">
+                                            <?= htmlspecialchars($user['role']); ?>
+                                        </span>
+
+                                        <?php 
+        $statusClass = 'badge--online'; 
+        $statusText = '🟢 Online';
+
+        if (isset($user['status'])) {
+            switch ($user['status']) {
+                case 'offline':
+                    $statusClass = 'badge--offline'; 
+                    $statusText = '⚪ Offline';
+                    break;
+                case 'banned':
+                    $statusClass = 'badge--banned'; 
+                    $statusText = '⛔ Zbanowany';
+                    break;
+            }
+        }
+    ?>
+
+                                        <span class="role-badge <?= $statusClass; ?>">
+                                            <?= $statusText; ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-stardust">✨
+                                        <?= number_format($user['star_dust'] ?? 0); ?>
+                                    </td>
+                                    <td class="text-center actions-cell">
+                                        <?php if($user['id'] != $_SESSION['user_id']): ?>
+                                        <?php if(isset($user['status']) && $user['status'] === 'banned'): ?>
+                                        <button class="btn-action btn-restore" data-id="<?= $user['id']; ?>"
+                                            title="Przywróć użytkownika">
+                                            <i class="fa-solid fa-user-check"></i> Przywróć
+                                        </button>
+                                        <?php else: ?>
+                                        <button class="btn-action btn-delete" data-id="<?= $user['id']; ?>"
+                                            title="Usuń użytkownika">
+                                            <i class="fa-solid fa-trash-can"></i> Usuń
+                                        </button>
+                                        <?php endif; ?>
+                                        <?php else: ?>
+                                        <span style="color: #64748b; font-size: 0.8rem; font-style: italic;">To
+                                            Ty</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <?php else: ?>
+                                <tr>
+                                    <td colspan="5" class="text-center" style="padding: 40px; color: #64748b;">
+                                        Nie udało się nawiązać połączenia z bazą danych kadetów.
+                                    </td>
+                                </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </section>
+
+                <footer class="page-footer">
+                    <p>&copy; 2026 Centrum Dowodzenia Galactic Math Explorer.</p>
+                </footer>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="/public/scripts/admin_panel.js" defer></script>
+</body>
+
+</html>

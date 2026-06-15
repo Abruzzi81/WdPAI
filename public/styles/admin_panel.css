@@ -1,0 +1,244 @@
+/* ======================================================================
+   CENTRALNY PANEL ADMINISTRACYJNY - UŻYTKOWNICY
+   ====================================================================== */
+
+.admin-header {
+    margin-bottom: 30px;
+}
+
+.admin-title {
+    font-size: 2rem !important;
+    /* Ignorujemy globalne h1 */
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #f1f5f9;
+    margin-bottom: 10px;
+}
+
+.admin-description {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+/* --- PASEK NARZĘDZIOWY / WYSZUKIWARKA --- */
+.admin-toolbar {
+    background-color: rgba(14, 16, 41, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #475569;
+    font-size: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px 12px 46px;
+    background-color: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.1);
+}
+
+.search-input::placeholder {
+    color: #475569;
+}
+
+/* --- KOSMICZNA TABELA DATA-GRID --- */
+.table-container {
+    background-color: rgba(14, 16, 41, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    overflow-x: auto;
+    /* Kluczowe dla RWD: tabela dostaje wewnętrzny scroll na telefonie */
+    width: 100%;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.admin-table th {
+    background-color: rgba(16, 17, 38, 0.8);
+    color: #38bdf8;
+    /* Kosmiczny błękit dla nagłówków */
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 18px 24px;
+    border-bottom: 2px solid rgba(56, 189, 248, 0.2);
+}
+
+.admin-table td {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: #cbd5e1;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+/* Komórka użytkownika (Awatar + Nick) */
+.user-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.table-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid #81ECFF;
+    object-fit: cover;
+    background-color: #0b0f19;
+}
+
+.user-name {
+    color: #ffffff;
+}
+
+.font-bold {
+    font-weight: 600;
+}
+
+/* --- ETYKIETY RÓL (BADGES) --- */
+.role-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.5px;
+}
+
+.badge--admin {
+    background-color: rgba(244, 63, 94, 0.15);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.3);
+}
+
+.badge--user {
+    background-color: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.text-stardust {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+/* --- PRZYCISK USUWANIA --- */
+.btn-action {
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    transition: transform 0.15s, background-color 0.15s, box-shadow 0.15s;
+}
+
+.btn-delete {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete:hover {
+    background-color: #ef4444;
+    color: #0b0d19;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
+}
+
+/* Klasy pomocnicze */
+.text-center {
+    text-align: center;
+}
+
+/* ======================================================================
+   WSPARCIE RWD
+   ====================================================================== */
+@media (max-width: 768px) {
+    .admin-title {
+        font-size: 1.6rem !important;
+    }
+
+    .admin-toolbar {
+        padding: 15px;
+    }
+
+    .search-input {
+        font-size: 0.9rem;
+        padding: 10px 16px 10px 42px;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 12px 16px;
+        /* Zmniejszamy paddingi tabeli na tabletach/telefonach */
+    }
+
+    /* Zielona pigułka dla aktywnych */
+    .badge--online {
+        background-color: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    /* Szara, przygaszona pigułka dla niedostępnych */
+    .badge--offline {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: #64748b;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Czerwona pigułka dla zbanowanych */
+    .badge--banned {
+        background-color: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+}

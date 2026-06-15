@@ -1,6 +1,8 @@
 <?php
 
 require_once 'AppController.php';
+// WAŻNE: Dołączamy repozytorium, aby móc wywołać metodę aktualizacji statusu
+require_once __DIR__ . '/../repositories/UsersRepository.php'; 
 
 class SecurityController extends AppController
 {
@@ -29,12 +31,22 @@ class SecurityController extends AppController
             return $this->render('login', ['messages' => 'Wrong password']);
         }
 
+        // === NOWOŚĆ: Blokada logowania dla zbanowanych kadetów ===
+        if (isset($user['status']) && $user['status'] === 'banned') {
+            return $this->render('login', [
+                'messages' => 'Twoje konto zostało zablokowane przez Galactic Command Center.'
+            ]);
+        }
+
         session_regenerate_id(true);
 
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_firstname'] = $user['firstname'] ?? null;
         $_SESSION['is_logged_in'] = true;
+
+        // === Przełączamy status użytkownika na ONLINE w bazie danych ===
+        $userRepository->updateUserStatus($user['id'], 'online');
 
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/mission");
@@ -82,7 +94,7 @@ class SecurityController extends AppController
                 return $this->render("register", ["messages" => "User exists", 'data' => $formData]);
             }
 
-            // 5. Haszowanie i zapis do bazy
+            // 5. Haszowanie i zapis do bazy (status domyślnie ustawi się jako 'offline')
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
             $userRepository->createUser($email, $hashedPassword, $username);
 
@@ -94,18 +106,23 @@ class SecurityController extends AppController
         return $this->render("register");
     }
 
-    // ================= W KLEJONY  KOD  START =================
     public function logout()
     {
-        // upewniamy się, że sesja jest uruchomiona
+        // Upewniamy się, że sesja jest uruchomiona
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        // czyścimy wszystkie dane sesji
+        // === Przełączamy użytkownika na OFFLINE przed wyczyszczeniem sesji ===
+        if (!empty($_SESSION['user_id'])) {
+            $userRepository = new UsersRepository();
+            $userRepository->updateUserStatus($_SESSION['user_id'], 'offline');
+        }
+
+        // Czyścimy wszystkie dane sesji
         $_SESSION = [];
 
-        // opcjonalnie, kasujemy ciasteczko sesji po stronie przeglądarki
+        // Kasujemy ciasteczko sesji po stronie przeglądarki
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(
@@ -119,12 +136,12 @@ class SecurityController extends AppController
             );
         }
 
-        // niszczymy sesję
+        // Niszczymy sesję
         session_destroy();
 
-        // przekierowanie np. na ekran logowania
+        // Przekierowanie na ekran logowania
         $url = "http://$_SERVER[HTTP_HOST]";
         header("Location: {$url}/login");
-        exit(); // Dobra praktyka: kończymy działanie skryptu po przekierowaniu
+        exit(); 
     }
 }

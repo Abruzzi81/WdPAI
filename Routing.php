@@ -6,6 +6,7 @@ require_once 'src/controllers/MissionController.php';
 require_once 'src/controllers/TrainingController.php';
 require_once 'src/controllers/HangarController.php';
 require_once 'src/controllers/ProfileController.php';
+require_once 'src/controllers/AdminController.php';
 
 class Routing
 {
@@ -43,6 +44,10 @@ class Routing
         "profile" => [
             "controller" => "ProfileController",
             "action" => "profile"
+        ],
+        "adminPanel" => [
+            "controller" => "AdminController",
+            "action" => "users"
         ]
     ];
 
@@ -77,11 +82,15 @@ class Routing
             } elseif ($path === 'equip-avatar') {
                 $customController = "HangarController";
                 $customAction = "equipAvatar";
-            }
-            // NOWOŚĆ: Obsługa asynchronicznego zapisu zakończonej sukcesem misji
-            elseif ($path === 'save-mission') {
+            } elseif ($path === 'save-mission') {
                 $customController = "MissionController";
                 $customAction = "saveMissionResult";
+            } elseif ($path === 'delete-user') {
+                $customController = "AdminController";
+                $customAction = "deleteUser";
+            } elseif ($path === 'restore-user') {
+                $customController = "AdminController";
+                $customAction = "restoreUser";
             }
         }
         // =================================================================

@@ -7,12 +7,33 @@ class UsersRepository extends Repository
     public function getUsers(): ?array
     {
         $query = $this->database->connect()->prepare(
-            "SELECT * FROM users;"
+            "SELECT 
+                u.id, 
+                u.username, 
+                u.email, 
+                u.role,
+                u.status,
+                COALESCE(ud.star_dust, 0) AS star_dust,
+                COALESCE(a.image_filename, 'avatar_cadet.png') AS avatar_file
+             FROM users u
+             LEFT JOIN user_details ud ON u.id = ud.user_id
+             LEFT JOIN avatars a ON ud.current_avatar_id = a.id
+             ORDER BY u.id ASC;"
         );
         $query->execute();
 
         $users = $query->fetchAll(PDO::FETCH_ASSOC);
-        return $users;
+        return $users ? $users : [];
+    }
+
+    public function updateUserStatus(int $userId, string $status): void
+    {
+        $query = $this->database->connect()->prepare(
+            "UPDATE users SET status = :status WHERE id = :id;"
+        );
+        $query->bindParam(':status', $status, PDO::PARAM_STR);
+        $query->bindParam(':id', $userId, PDO::PARAM_INT);
+        $query->execute();
     }
 
     public function getUserByEmail(string $email)
@@ -75,6 +96,7 @@ class UsersRepository extends Repository
             "SELECT 
                 u.id, 
                 u.username, 
+                u.role, 
                 ud.star_dust, 
                 ud.exp,
                 ud.current_avatar_id,

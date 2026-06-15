@@ -4,7 +4,12 @@
       <li><a href="/mission"><i class="fa-solid fa-rocket"></i> Misja</a></li>
       <li><a href="/training"><i class="fa-solid fa-stopwatch"></i> Trening</a></li>
       <li><a href="/hangar"><i class="fa-solid fa-wrench"></i> Hangar</a></li>
-      <li><a href="/profile"><i class="fa-solid fa-circle-user"></i> Profil</a></li>
+      <li><a href="/profile"><i class="fa-solid fa-circle-user"></i> Profil</a></li>    
+      
+      <?php if (isset($loggedPlayer['role']) && $loggedPlayer['role'] === 'admin'): ?>
+        <li><a href="/adminPanel"><i class="fa-solid fa-users-gear"></i> Admin</a></li>
+      <?php endif; ?>
+      
       <li class="logout"><a href="/logout"><i class="fa-solid fa-arrow-right-from-bracket"></i> Wyloguj</a></li>
     </ul>
   </nav>
