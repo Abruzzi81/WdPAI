@@ -16,10 +16,6 @@ class Routing
             "controller" => "SecurityController",
             "action" => "login"
         ],
-        "dashboard" => [
-            "controller" => "DashboardController",
-            "action" => "index"
-        ],
         "" => [
             "controller" => "SecurityController",
             "action" => "login"

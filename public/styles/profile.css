@@ -1,0 +1,464 @@
+
+.bg-easy {
+    background-color: rgba(163, 230, 53, 0.2);
+    color: #a3e635;
+    border: 1px solid rgba(163, 230, 53, 0.4);
+}
+
+.bg-medium {
+    background-color: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.bg-hard {
+    background-color: rgba(244, 63, 94, 0.2);
+    color: #f43f5e;
+    border: 1px solid rgba(244, 63, 94, 0.4);
+}
+
+.bg-legendary {
+    background-color: rgba(234, 179, 8, 0.2);
+    color: #eab308;
+    border: 1px solid rgba(234, 179, 8, 0.4);
+}
+
+.border-easy {
+    border-left: 4px solid #a3e635;
+}
+
+.border-medium {
+    border-left: 4px solid #38bdf8;
+}
+
+.border-hard {
+    border-left: 4px solid #f43f5e;
+}
+
+.border-legendary {
+    border-left: 4px solid #eab308;
+}
+
+/* Kolory tekstów dla wartości statystyk */
+.text-medium {
+    color: #38bdf8;
+}
+
+.text-easy {
+    color: #a3e635;
+}
+
+.text-hard {
+    color: #f43f5e;
+}
+
+.text-legendary {
+    color: #eab308;
+}
+
+/* --- 1. NAGŁÓWEK PROFILU --- */
+.profile-header {
+    background-color: rgba(14, 16, 41, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto 30px auto;
+    box-sizing: border-box;
+}
+
+.profile-avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Zaktualizowany okrągły awatar z neonowym podświetleniem */
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #81ECFF;
+    box-shadow: 0 0 15px rgba(129, 236, 255, 0.3);
+    background-color: rgba(14, 16, 41, 0.8);
+}
+
+/* Zabezpieczenie przed zniekształceniem obrazu awatara */
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-username {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+/* Dopasowanie flex dla rangi (ikona + tekst obok siebie) */
+.profile-rank {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.profile-stats-grid {
+    display: flex;
+    justify-content: flex-end; /* Wyrównuje kafelki do prawej krawędzi */
+    gap: 15px;
+    flex: 1;
+    max-width: 650px;
+    margin-left: auto;         /* Automatyczny margines po lewej odepchnie cały blok na maksa w prawo */
+}
+
+@media (max-width: 900px) {
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* Lepsza responsywność na tabletach */
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-stats-grid {
+        grid-template-columns: 1fr;
+        /* Jeden kafelek pod drugim na telefonach */
+    }
+}
+
+.stat-box {
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 140px;
+    box-sizing: border-box;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* --- UKŁAD SEKCJI DOLNYCH --- */
+.profile-content-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.profile-section {
+    flex: 1;
+    min-width: 320px;
+    background-color: rgba(14, 16, 41, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- 2. STYL OSIĄGNIĘĆ --- */
+.achievements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 14px;
+    background-color: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+}
+
+.achievement-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.achievement-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    /* Zabezpieczenie ikony przed zgniataniem */
+}
+
+.item--unlocked .achievement-icon {
+    background-color: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #eab308;
+}
+
+.item--unlocked .achievement-name {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Stan zablokowany */
+.item--locked {
+    opacity: 0.5;
+}
+
+.item--locked .achievement-icon {
+    background-color: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: #94a3b8;
+}
+
+.item--locked .achievement-name {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.achievement-desc {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* --- 3. STYL OSTATNICH MISJI (Z WBUDOWANYM SCROLLEM) --- */
+.mission-log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    
+    /* NOWOŚĆ: Blokada wysokości i włączenie przewijania */
+    max-height: 400px;         /* Maksymalna wysokość listy (około 4-5 logów widocznych naraz) */
+    overflow-y: auto;          /* Włącza pionowy scrollbar, gdy elementów jest za dużo */
+    padding-right: 8px;        /* Przestrzeń na pasek przewijania, by nie zasłaniał tekstu */
+    box-sizing: border-box;
+}
+
+/* OPCJONALNIE: Stylizacja paska przewijania, aby pasował do kosmicznego klimatu gry */
+.mission-log-list::-webkit-scrollbar {
+    width: 6px;                /* Szerokość paska */
+}
+
+.mission-log-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02); /* Tło ścieżki paska */
+    border-radius: 10px;
+}
+
+.mission-log-list::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);   /* Kolor paska (błękitny pasujący do klasy medium) */
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.mission-log-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(236, 72, 153, 0.6);   /* Zmiana koloru na neonowy róż po najechaniu */
+}
+
+.log-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.log-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.log-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.log-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.log-name {
+    font-size: 0.95rem;
+    color: #f1f5f9;
+    font-weight: 500;
+    margin: 0;
+}
+
+.log-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+}
+
+.log-reward {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.log-date {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* Informacja o braku aktywności */
+.mission-log-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+    padding: 20px;
+}
+
+
+/* ======================================================================
+   WSPARCIE DLA MAŁYCH EKRANÓW (RWD) - PROFIL KADETA
+   ====================================================================== */
+
+@media (max-width: 768px) {
+    /* --- NAGŁÓWEK PROFILU --- */
+    .profile-header {
+        flex-direction: column; /* Układamy tożsamość nad statystykami */
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        gap: 25px;
+    }
+
+    .profile-avatar-container {
+        flex-direction: column; /* Awatar nad nazwą użytkownika */
+        gap: 12px;
+    }
+
+    .profile-avatar {
+        width: 85px;  /* Delikatnie mniejszy awatar na mobile */
+        height: 85px;
+    }
+
+    .profile-username {
+        font-size: 1.5rem;
+    }
+
+    .profile-rank {
+        justify-content: center; /* Centrowanie rangi na środku ekranu */
+    }
+
+    /* Siatka statystyk (Gwiezdny pył, EXP, Treningi) */
+    .profile-stats-grid {
+        display: grid !important; /* Wymuszamy siatkę zamiast flexboxa */
+        grid-template-columns: repeat(3, 1fr) !important; /* Wszystkie 3 kafelki w jednym rzędzie */
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0; /* Kasujemy odpychanie do prawej */
+        gap: 10px;
+    }
+
+    .stat-box {
+        padding: 10px 5px; /* Bardziej kompaktowe kafelki */
+        min-width: unset;  /* Kasujemy sztywną szerokość */
+    }
+
+    .stat-label {
+        font-size: 0.65rem; /* Mniejszy podpis, żeby się nie zawijał */
+        letter-spacing: 0;
+    }
+
+    .stat-value {
+        font-size: 1rem; /* Mniejsza czcionka wartości */
+    }
+
+    /* --- SEKCJE DOLNE (Osiągnięcia i Historia) --- */
+    .profile-content-layout {
+        gap: 20px;
+    }
+
+    .profile-section {
+        padding: 15px; /* Mniejsze paddingi, by odzyskać przestrzeń na dane */
+        min-width: 100%; /* Każda sekcja zajmuje całą szerokość ekranu */
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+    }
+
+    /* Dopasowanie wpisów historii treningów na mobile */
+    .log-item {
+        padding: 12px 10px;
+    }
+
+    .log-name {
+        font-size: 0.85rem;
+    }
+
+    .log-reward {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Wyjątkowo małe ekrany (np. starsze smartfony) - jeśli 3 kafelki w rzędzie to za dużo */
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Układ 2 kafelki w rzędzie, trzeci ląduje pod spodem */
+    }
+    
+    /* Sprawiamy, że trzeci kafelek (Treningi) rozciąga się na całą szerokość dolnego rzędu */
+    .profile-stats-grid .stat-box:nth-child(3) {
+        grid-column: span 2;
+    }
+}

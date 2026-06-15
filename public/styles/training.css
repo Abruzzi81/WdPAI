@@ -1,0 +1,610 @@
+/* Kontener-rodzic wewnątrz Twojego <main> dzielący stronę na Górę, Środek i Dół */
+.page-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 100px);
+    /* Elastyczna wysokość uwzględniająca paddingi */
+}
+
+/* 1. GÓRA: Twój nagłówek misji */
+.training-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Środkuje pigułkę, h1 i p w poziomie */
+    text-align: center;
+    /* Środkuje tekst wewnątrz linii */
+    padding: 20px 20px 40px 20px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    /* Środkuje cały blok nagłówka w wolnej przestrzeni */
+}
+
+.training-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(26, 43, 76, 0.6);
+    border: 1px solid #2563eb;
+    border-radius: 50px;
+    padding: 6px 18px;
+    margin-bottom: 24px;
+}
+
+.training-badge__text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #38bdf8;
+}
+
+.training-title {
+    font-size: 2rem !important;
+    /* !important upewni się, że zignorujemy globalne h1 z góry pliku */
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 16px 0;
+    color: #f1f5f9;
+    text-align: center;
+    width: 100%;
+}
+
+.training-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #94a3b8;
+    max-width: 650px;
+}
+
+/* 2. ŚRODEK (Główna zawartość / Twoje karty) */
+.page-main-content {
+    flex: 1;
+    /* Automatycznie wypełnia wolną przestrzeń i spycha stopkę */
+    padding: 20px 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 3. DÓŁ (Stopka sekcji) */
+.page-footer {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    color: #475569;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 40px;
+}
+
+
+/* ======================== SIATKA I KARTY MISJI ======================== */
+
+
+/* Kontener trzymający wszystkie 4 karty obok siebie */
+.trainings-grid {
+    display: flex;
+    flex-wrap: wrap;
+    /* Pozwala kartom przejść do nowej linii na mniejszych ekranach */
+    gap: 20px;
+    /* Odstępy między kartami */
+    justify-content: center;
+    /* Środkuje karty w sekcji głównej */
+    width: 100%;
+    padding: 20px 0;
+}
+
+/* Podstawowy wygląd pojedynczego boxa (karty) */
+.training-card {
+    background-color: rgba(14, 16, 41, 0.6);
+    /* Ciemne, półprzezroczyste tło dopasowane do gry */
+    border-radius: 16px;
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Środkuje ikonę oraz teksty w poziomie wewnątrz pionowej karty */
+    text-align: center;
+    /* Środkuje linijki tekstu wewnątrz karty */
+    text-decoration: none;
+
+    gap: 20px;
+    /* Odstęp w pionie między ikoną a tekstem */
+    flex: 1;
+    /* Elastyczne dopasowanie szerokości */
+    min-width: 280px;
+    /* Minimalna szerokość pojedynczej karty */
+    max-width: 340px;
+    /* Maksymalna szerokość pojedynczej karty */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+/* Efekt najechania myszką (delikatne uniesienie) */
+.training-card:hover {
+    transform: translateY(-4px);
+}
+
+
+.training-card__icon {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    /* Wielkość emoji w przypadku braku obrazka */
+}
+
+.training-card__icon {
+    width: 65px;
+    height: 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+    /* zaokrąglenie rogów */
+    font-size: 1.8rem;
+    /* Rozmiar ikony */
+
+    /* Domyślne, bardzo ciemne tło boksika z delikatną ramką */
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Część tekstowa karty */
+.training-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Tytuł misji wewnątrz karty */
+.training-card__title {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+}
+
+.training-card__description {
+    font-size: 0.85rem;
+    /* Mniejsza czcionka, żeby opis nie dominował karty */
+    line-height: 1.5;
+    /* Przyjazna dla oka interlinia */
+    color: #a0aabf;
+    /* Przygaszony szaro-niebieski kolor tekstu */
+    margin: 10px 0 15px 0;
+    /* Odstępy: 10px od symboli na górze, 15px od bonusu na dole */
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    min-height: 60px;
+    /* Wymusza równą wysokość opisów, dzięki czemu wszystkie karty będą identycznej wielkości */
+}
+
+/* Tekst z bonusem gwiezdnego pyłu */
+.training-card__bonus {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    /* Szary, przygaszony tekst */
+    margin: 0;
+}
+
+/* Podświetlenie samej wartości mnożnika */
+.bonus-value {
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+/* ---------------------------------------------------------------------- */
+/* DOPASOWANIE KOLORÓW WYPEŁNIENIA I IKON DLA KAŻDEGO POZIOMU            */
+/* ---------------------------------------------------------------------- */
+
+/* Karta 1 - EASY (Zielona/Seledynowa poświata i ikona) */
+.card--easy .training-card__icon {
+    background-color: rgba(163, 230, 53, 0.06);
+    /* Bardzo delikatne zielone wypełnienie */
+    border: 1px solid rgba(163, 230, 53, 0.2);
+    /* Zielona ramka */
+}
+
+.card--easy .training-card__icon i {
+    color: #a3e635;
+    /* Kolor samej ikony Font Awesome */
+}
+
+/* Karta 2 - NORMAL (Błękitna poświata i ikona) */
+.card--medium .training-card__icon {
+    background-color: rgba(56, 189, 248, 0.06);
+    /* Delikatne błękitne wypełnienie */
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.card--medium .training-card__icon i {
+    color: #38bdf8;
+}
+
+/* Karta 3 - HARD (Różowa/Fioletowa poświata i ikona) */
+.card--hard .training-card__icon {
+    background-color: rgba(244, 63, 94, 0.06);
+    /* Delikatne różowe wypełnienie */
+    border: 1px solid rgba(244, 63, 94, 0.2);
+}
+
+.card--hard .training-card__icon i {
+    color: #f43f5e;
+}
+
+/* Karta 4 - LEGENDARY (Złota poświata i ikona) */
+.card--legendary .training-card__icon {
+    background-color: rgba(234, 179, 8, 0.06);
+    /* Delikatne złote wypełnienie */
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.card--legendary .training-card__icon i {
+    color: #eab308;
+}
+
+/* ---------------------------------------------------------------------- */
+/* INDYWIDUALNE KOLORY RAMEK (NEON)                                       */
+/* ---------------------------------------------------------------------- */
+
+/* Karta 1 - Easy (Seledynowa zieleń) */
+.card--easy {
+    border: 1px solid rgba(163, 230, 53, 0.3);
+    box-shadow: inset 0 0 15px rgba(163, 230, 53, 0.05);
+}
+
+.card--easy .bonus-value {
+    color: #A3E635CC;
+}
+
+.card--easy:hover {
+    box-shadow: 0 0 20px rgba(163, 230, 53, 0.25);
+    border-color: rgba(163, 230, 53, 0.8);
+}
+
+/* Karta 2 - Medium (Jasny błękit) */
+.card--medium {
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.05);
+}
+
+.card--medium .bonus-value {
+    color: #38bdf8;
+}
+
+.card--medium:hover {
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    border-color: rgba(56, 189, 248, 0.8);
+}
+
+/* Karta 3 - Hard (Neonowy róż) */
+.card--hard {
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    box-shadow: inset 0 0 15px rgba(244, 63, 94, 0.05);
+}
+
+.card--hard .bonus-value {
+    color: #f43f5e;
+}
+
+.card--hard:hover {
+    box-shadow: 0 0 20px rgba(244, 63, 94, 0.25);
+    border-color: rgba(244, 63, 94, 0.8);
+}
+
+/* Karta 4 - Expert/legendary (Złoty) */
+.card--legendary {
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    box-shadow: inset 0 0 15px rgba(234, 179, 8, 0.05);
+}
+
+.card--legendary .bonus-value {
+    color: #eab308;
+}
+
+.card--legendary:hover {
+    box-shadow: 0 0 20px rgba(234, 179, 8, 0.25);
+    border-color: rgba(234, 179, 8, 0.8);
+}
+
+/* #endregion */
+
+/* #region [3a] STRONA: TRENING-GAME */
+
+/* ======================================================================
+   [3] STRONA: TRENING (Rozgrywka - Wersja Kompaktowa)
+   ====================================================================== */
+.game-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 60px);
+    /* Wymusza dokładną wysokość ekranu bez paska górnego */
+    background-color: #0b0c1e;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* Całkowicie blokuje pojawianie się suwaków */
+}
+
+/* --- PASEK STATUSU --- */
+.game-status-bar {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    /* Zmniejszony odstęp od reaktora */
+    width: 100%;
+    max-width: 450px;
+    justify-content: space-between;
+}
+
+.status-item {
+    background: rgba(16, 17, 38, 0.6);
+    border: 1px solid rgba(70, 70, 91, 0.3);
+    padding: 0.8rem 1.5rem;
+    /* Mniejszy wewnętrzny odstęp */
+    border-radius: 10px;
+    font-size: 1.2rem;
+    /* Zmniejszony tekst */
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.timer-box {
+    color: #ec4899;
+    border-color: rgba(236, 72, 153, 0.3);
+}
+
+.score-box {
+    color: #a3e635;
+    border-color: rgba(163, 230, 53, 0.3);
+}
+
+.level-badge {
+    color: #81ecff;
+}
+
+/* --- CENTRALNY PANEL REAKTORA --- */
+.math-core-panel {
+    position: relative;
+    background: rgba(16, 17, 38, 0.85);
+    border: 1px solid rgba(129, 236, 255, 0.2);
+    backdrop-filter: blur(16px);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    /* Nieco węższy panel */
+    padding: 3rem 2.5rem;
+    /* Kompaktowe paddingi */
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.core-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(129, 236, 255, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.panel-subtitle {
+    font-size: 1rem;
+    color: #46465b;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 2rem;
+}
+
+/* Wyświetlacz działania - kluczowe zmniejszenie */
+.equation-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 4.8rem;
+    /* Zmniejszone z 6.4rem */
+    font-weight: 700;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+}
+
+.equation-display .operator {
+    color: #81ecff;
+    font-size: 3rem;
+}
+
+/* --- POLE WPISYWANIA WYNIKU --- */
+.input-wrapper {
+    position: relative;
+    max-width: 160px;
+    margin: 0 auto 2rem auto;
+}
+
+#user-answer {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #46465b;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.8rem;
+    /* Zmniejszone z 3.6rem */
+    color: #81ecff;
+    text-align: center;
+    padding: 0.5rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+#user-answer::-webkit-outer-spin-button,
+#user-answer::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#user-answer:focus {
+    border-color: #81ecff;
+}
+
+/* Przycisk Zatwierdzenia */
+.submit-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(129, 236, 255, 0.4);
+    color: #81ecff;
+    padding: 1.2rem;
+    /* Mniejsza wysokość przycisku */
+    border-radius: 25px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.submit-btn:hover {
+    background: #81ecff;
+    color: #101126;
+    box-shadow: 0 0 15px rgba(129, 236, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+/* ======================================================================
+   WSPARCIE DLA MAŁYCH EKRANÓW (RWD) - LISTA TRENINGÓW I PANEL ROZGRYWKI
+   ====================================================================== */
+
+@media screen and (max-width: 768px) {
+    
+    /* --- EKRAN WYBORU TRENINGU (training.html) --- */
+    
+    .training-header {
+        padding: 10px 10px 25px 10px;
+    }
+
+    .training-title {
+        font-size: 1.6rem !important; /* Zmniejszamy nagłówek sekcji */
+    }
+
+    .training-description {
+        font-size: 0.9rem;
+    }
+
+    /* Siatka kart przechodzi w układ jedna pod drugą */
+    .trainings-grid {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .training-card {
+        width: 100%;
+        max-width: 100%; /* Rozciągamy karty na całą szerokość ekranu telefonu */
+        min-width: unset;
+        flex-direction: row; /* Ikona obok tekstu zamiast nad nim - oszczędność miejsca w pionie */
+        text-align: left;
+        align-items: center;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .training-card__icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        flex-shrink: 0; /* Zapobiega spłaszczeniu ikony */
+    }
+
+    .training-card__content {
+        gap: 4px;
+        width: 100%;
+    }
+
+    .training-card__description {
+        min-height: unset; /* Resetujemy sztywną wysokość, bo w poziomie tekst układa się inaczej */
+        margin: 4px 0 8px 0;
+        font-size: 0.8rem;
+    }
+
+
+    /* --- EKRAN ROZGRYWKI TRENINGOWEJ (training-game.html) --- */
+
+    main.game-control {
+        height: auto; /* Zdejmujemy sztywne height, by dopasować się do dolnego paska nawigacji */
+        min-height: calc(100vh - 125px); /* Uwzględnia górny header oraz dolne menu mobilne */
+        padding: 1rem;
+        justify-content: flex-start; /* Przesuwamy elementy lekko do góry, żeby klawiatura ekranowa ich nie zasłoniła */
+    }
+
+    /* Pasek statusu: zmniejszamy odstępy i fonty */
+    .game-status-bar {
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .status-item {
+        padding: 0.5rem 0.6rem; /* Bardziej kompaktowe pigułki statusu */
+        font-size: 0.85rem;     /* Zmniejszony tekst, by 3 elementy zmieściły się obok siebie */
+        gap: 0.4rem;
+        justify-content: center;
+        flex: 1; /* Każda pigułka zajmuje tyle samo miejsca */
+    }
+
+    /* Centralny reaktor */
+    .math-core-panel {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    .panel-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* GŁÓWNE DZIAŁANIE: Zmniejszamy czcionkę, żeby liczby nie wyszły poza ekran */
+    .equation-display {
+        font-size: 2.8rem; /* Zmniejszone z 4.8rem */
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .equation-display .operator {
+        font-size: 2rem;
+    }
+
+    /* Pole wprowadzania i przycisk */
+    .input-wrapper {
+        max-width: 120px;
+        margin-bottom: 1.5rem;
+    }
+
+    #user-answer {
+        font-size: 2rem; /* Zmniejszone z 2.8rem */
+    }
+
+    .submit-btn {
+        padding: 1rem;
+        font-size: 1rem;
+        border-radius: 12px; /* Lekko bardziej kwadratowe dla lepszego UX na mobile */
+    }
+}

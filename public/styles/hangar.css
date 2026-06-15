@@ -1,0 +1,341 @@
+/* ==========================================================================
+   UKŁAD GŁÓWNY I RESPONSYWNOŚĆ
+   ========================================================================== */
+
+/* Główny kontener dzielący stronę na dwie kolumny (Podgląd | Sklep) */
+.hangar-container {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    margin: 20px auto 40px auto;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Responsywność: na telefonach i małych tabletach układ przechodzi w jedną kolumnę */
+@media (max-width: 950px) {
+    .hangar-container {
+        grid-template-columns: 1fr;
+    }
+
+    .hangar-preview-section {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+/* ==========================================================================
+   LEWA STRONA: KARTA PODGLĄDU PROFILU (TWÓJ PROFIL)
+   ========================================================================== */
+
+.hangar-preview-section {
+    position: sticky;
+    top: 20px;
+    /* Karta płynie za użytkownikiem podczas przewijania sklepu */
+}
+
+.astronaut-preview-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px solid rgba(129, 236, 255, 0.2);
+    border-radius: 16px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.astronaut-preview-card:hover {
+    border-color: rgba(129, 236, 255, 0.6);
+    box-shadow: 0 8px 32px rgba(129, 236, 255, 0.15);
+}
+
+.section-title {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+/* Okrągłe okno dużego awatara */
+.preview-window {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 25px auto;
+    border-radius: 50%;
+    border: 4px solid #81ECFF;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    overflow: hidden;
+    background: #0b0f19;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Wymuszenie idealnego dopasowania dużego obrazka bez deformacji */
+.current-avatar-display {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Dolny pasek z nazwą aktualnego awatara */
+.preview-footer {
+    background: rgba(11, 15, 25, 0.6);
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.current-skin-name {
+    color: #ffffff;
+    font-size: 1.05rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    display: block;
+}
+
+/* ==========================================================================
+   PRAWA STRONA: SIATKA SKLEPU Z AWATARAMI
+   ========================================================================== */
+
+.hangar-shop-section {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    box-sizing: border-box;
+}
+
+.category-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    margin-top: 0;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 1px;
+}
+
+/* Klasy pomocnicze kolorów statusów */
+.text-pink {
+    color: #38bdf8;
+}
+
+.text-green {
+    color: #a3e635;
+    font-weight: bold;
+}
+
+.text-blue {
+    color: #38bdf8;
+    font-weight: 500;
+}
+
+/* Siatka kafelków */
+.skins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    align-items: stretch; /* Wymusza jednakową wysokość kart w rzędzie */
+}
+
+/* Pojedyncza karta awatara */
+.skin-item {
+    background: rgba(30, 41, 59, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Rozpycha zdjęcie, nazwę i cenę od siebie */
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Efekt uniesienia karty po najechaniu myszką */
+.skin-item:hover {
+    transform: translateY(-4px);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(56, 189, 248, 0.4);
+    box-shadow: 0 8px 20px rgba(56, 189, 248, 0.1);
+}
+
+/* Stan: Karta aktualnie aktywnego awatara (Neonowa zieleń) */
+.skin-item.item--active {
+    border-color: #a3e635;
+    background: rgba(163, 230, 53, 0.04);
+    box-shadow: 0 0 15px rgba(163, 230, 53, 0.15);
+}
+
+.skin-item.item--active:hover {
+    border-color: #a3e635;
+    box-shadow: 0 0 20px rgba(163, 230, 53, 0.25);
+}
+
+/* Okrągła ramka dla miniatury wewnątrz sklepu */
+.avatar-card-image {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden; /* Wytnie krawędzie grafik do koła */
+    margin-bottom: 15px;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: #0b0f19;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Zapobiega zgniataniu kółka na mniejszych ekranach */
+}
+
+.avatar-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Stan: Stylizacja dla zablokowanych modułów (Szarość + Kłódka) */
+.item--locked .avatar-card-image img {
+    filter: grayscale(90%) brightness(40%);
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.4);
+    color: #ef4444; /* Czerwona kłódka sygnałowa */
+    font-size: 1.4rem;
+    border-radius: 50%;
+}
+
+/* Nazwa przedmiotu w sklepie */
+.skin-name {
+    color: #f1f5f9;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 12px;
+    text-align: center;
+    line-height: 1.3;
+}
+
+/* Pigułka z ceną lub statusem u dołu karty */
+.skin-price {
+    color: #fbbf24; /* Złoty kolor dla punktów Star Dust */
+    font-weight: bold;
+    font-size: 0.85rem;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    width: 85%;
+    text-align: center;
+    box-sizing: border-box;
+    display: block;
+    margin-top: auto; /* Popycha pigułkę na dół karty przy różnej długości nazw */
+}
+
+/* ==========================================================================
+                OBSŁUGA KOMUNIKATU O BRAKU PRZEDMIOTÓW
+   ========================================================================== */
+
+/* Zapobiega zgnieceniu tekstu błędu i pozwala mu zająć pełną szerokość grida */
+.no-items-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #94a3b8;
+    padding: 40px;
+}
+
+.no-items-message i {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #ec4899;
+    display: block;
+}
+
+
+/* ==========================================================================
+   WSPARCIE DLA SAKLI MOBILNEJ I SMARTFONÓW (RWD)
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    .hangar-shop-section {
+        padding: 15px; /* Mniejszy padding sekcji sklepu */
+    }
+
+    .category-title {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 500px) {
+    /* 1. Zmniejszamy kartę podglądu, by zajmowała mniej miejsca w pionie */
+    .astronaut-preview-card {
+        padding: 15px;
+    }
+
+    .section-title {
+        margin-bottom: 15px;
+    }
+
+    .preview-window {
+        width: 140px;  /* Zmniejszamy z 200px */
+        height: 140px; /* Zmniejszamy z 200px */
+        margin-bottom: 15px;
+    }
+
+    .current-skin-name {
+        font-size: 0.95rem;
+    }
+
+    /* 2. Przebudowa siatki sklepu, aby mieściły się 2 kafelki obok siebie */
+    .skins-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Zmniejszamy minmax z 180px na 140px */
+        gap: 12px; /* Mniejsze odstępy między kafelkami */
+    }
+
+    /* 3. Dostosowanie kafelka awatara do mniejszych ekranów */
+    .skin-item {
+        padding: 15px 10px;
+    }
+
+    .avatar-card-image {
+        width: 80px;  /* Zmniejszamy z 110px */
+        height: 80px; /* Zmniejszamy z 110px */
+        margin-bottom: 10px;
+    }
+
+    .lock-overlay {
+        font-size: 1.1rem;
+    }
+
+    .skin-name {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+
+    .skin-price {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        width: 100%; /* Na małych ekranach pigułka zajmuje pełną szerokość kafelka */
+    }
+}
