@@ -26,13 +26,14 @@
         <?php endif; ?>
 
         <form method="POST" action="\register">
+            <input type="hidden" name="csrf_token" value="<?= $csrf_token ?? '' ?>">
 
             <div class="input-group">
                 <label class="input-label">Nazwa Kadeta</label>
                 <div class="input-wrapper login-input-wrapper">
                     <i class="fa-solid fa-user-gear"></i>
                     <!-- Dodany atrybut value dla username aby dane sie nie kasowały -->
-                    <input name="username" type="text" class="input-field" placeholder="Username"
+                    <input name="username" type="text" class="input-field" maxlength="50" placeholder="Username"
                         value="<?= isset($data['username']) ? htmlspecialchars($data['username']) : '' ?>" required
                         autocomplete="off">
                 </div>
@@ -43,7 +44,7 @@
                 <div class="input-wrapper login-input-wrapper">
                     <i class="fa-regular fa-user"></i>
                     <!-- Dodany atrybut value dla username aby dane sie nie kasowały -->
-                    <input name="email" type="email" class="input-field" placeholder="Twój email"
+                    <input name="email" type="email" class="input-field" maxlength="255" placeholder="Twój email"
                         value="<?= isset($data['email']) ? htmlspecialchars($data['email']) : '' ?>" required
                         autocomplete="off">
                 </div>
@@ -53,7 +54,7 @@
                 <label class="input-label">Sekretny Kod</label>
                 <div class="input-wrapper login-input-wrapper">
                     <i class="fa-solid fa-lock"></i>
-                    <input name="password" type="password" class="input-field" placeholder="Twoje hasło" required>
+                    <input name="password" type="password" maxlength="72" class="input-field" placeholder="Twoje hasło" required>
                 </div>
             </div>
 
@@ -61,7 +62,7 @@
                 <label class="input-label">Potwierdź sekretny kod</label>
                 <div class="input-wrapper login-input-wrapper">
                     <i class="fa-solid fa-shield-halved"></i>
-                    <input name="password2" type="password" class="input-field" placeholder="Powtórz hasło" required>
+                    <input name="password2" type="password" maxlength="72" class="input-field" placeholder="Powtórz hasło" required>
                 </div>
             </div>
 

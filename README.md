@@ -257,12 +257,23 @@ Interfejs administracyjny prezentujący pełną tabelę użytkowników wraz z dy
 
 ##### Ekran Logowania (Skalowanie Mobilne)
 Układ formularza dostosowany do ekranów dotykowych, zachowujący pełną czytelność pól wprowadzania danych.
+
 ![Ekran Logowania - Mobile](public/img/documentation/mobile_login.png)
 
 ##### Panel Dowodzenia Kadeta (Widok Smartfon)
 Zreorganizowany układ elementów, gdzie sekcje statystyk układają się pionowo, zapewniając wygodne przewijanie jednoręczne.
+
 ![Dashboard Kadeta - Mobile](public/img/documentation/mobile_dashboard.png)
 
 ##### Panel Administracyjny (Widok Smartfon)
 Prezentacja elastyczności tabeli administracyjnej z zachowaniem czytelności odznak statusowych oraz ułatwioną interakcją z przyciskami banowania/przywracania.
+
 ![Panel Administracyjny - Mobile](public/img/documentation/mobile_admin.png)
+
+
+
+## 6. Testy
+
+
+
+TODO
