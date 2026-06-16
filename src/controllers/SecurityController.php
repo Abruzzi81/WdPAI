@@ -9,8 +9,25 @@ class SecurityController extends AppController
 
     public function login()
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Generujemy token, jeśli jeszcze nie istnieje w sesji
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
         if (!$this->isPost()) {
-            return $this->render('login');
+            // Przekazujemy token do widoku logowania (GET)
+            return $this->render('login', ['csrf_token' => $_SESSION['csrf_token']]);
+        }
+
+        // Walidacja tokenu CSRF dla logowania ===
+        $userCsrfToken = $_POST['csrf_token'] ?? '';
+        if (empty($_SESSION['csrf_token']) || $userCsrfToken !== $_SESSION['csrf_token']) {
+            unset($_SESSION['csrf_token']); // Resetujemy unieważniony token
+            return $this->render('login', ['messages' => 'Nieprawidłowy lub wygasły token CSRF']);
         }
 
         $email = $_POST["email"] ?? '';
@@ -44,6 +61,7 @@ class SecurityController extends AppController
         }
 
         session_regenerate_id(true);
+        unset($_SESSION['csrf_token']); // Czyścimy token po zalogowaniu, dla bezpieczeństwa nowej sesji
 
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
@@ -69,7 +87,7 @@ class SecurityController extends AppController
             }
 
             $userCsrfToken = $_POST['csrf_token'] ?? '';
-            
+
             // Sprawdzamy czy token istnieje i czy pasuje do tokenu w sesji
             if (empty($_SESSION['csrf_token']) || $userCsrfToken !== $_SESSION['csrf_token']) {
                 // Czyszczenie tokenu na wypadek ataku i zwrócenie błędu
