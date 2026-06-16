@@ -127,7 +127,7 @@ class SecurityController extends AppController
 
             $user = $userRepository->getUserByEmail($email);
             if ($user) {
-                return $this->render("register", ["messages" => "User exists", 'data' => $formData]);
+                return $this->render("register", ["messages" => "Nie można utworzyć konta przy użyciu podanych danych uwierzytelniających.", 'data' => $formData]);
             }
 
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);

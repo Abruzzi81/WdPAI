@@ -272,7 +272,42 @@ Prezentacja elastyczności tabeli administracyjnej z zachowaniem czytelności od
 
 
 
-## 6. Testy
+## 7. Bezpieczeństwo Aplikacji (Cybersecurity Blueprint)
+
+Projekt **Galactic Math Explorer** został zaprojektowany z uwzględnieniem paradygmatu *Security by Design*. W warstwie kontrolerów (`SecurityController`), routing-u oraz bazy danych wdrożono szereg mechanizmów obronnych, które eliminują najczęstsze podatności zdefiniowane w klasyfikacji **OWASP Top 10**.
+
+### 7.1. Ochrona przed Cross-Site Request Forgery (CSRF)
+W celu uniemożliwienia przeprowadzenia ataków polegających na wymuszeniu wykonania nieautoryzowanych żądań w imieniu zalogowanego kadeta, formularze uwierzytelniania (`login`, `register`) zostały wyposażone w kryptograficzne tokeny synchronizacyjne (*Synchronizer Token Pattern*):
+* **Generowanie:** Podczas każdego żądania typu `GET` serwer generuje losowy, 32-bajtowy ciąg znaków przy użyciu bezpiecznej kryptograficznie funkcji `bin2hex(random_bytes(32))` i osadza go w sesji użytkownika (`$_SESSION['csrf_token']`).
+* **Wstrzykiwanie:** Token jest przekazywany do widoku HTML i serwowany w ukrytym polu formularza (`<input type="hidden" name="csrf_token">`).
+* **Weryfikacja:** Przy żądaniach `POST` kontroler dokonuje twardego porównania przesłanego tokenu z wartością sesyjną. W przypadku niezgodności lub braku tokenu, sesja jest natychmiastowo czyszczona (`unset`), a transakcja przerywana.
+
+### 7.2. Architektoniczny Podział Czasowników HTTP (Strict MVC Routing)
+W celu zabezpieczenia punktów końcowych (endpoints) przed nieautoryzowanym wstrzykiwaniem danych, wdrożono rygorystyczną kontrolę metod protokołu HTTP:
+* Żądania typu **GET** służą wyłącznie do prezentacji warstwy wizualnej (renderowanie czystego formularza) i całkowicie omijają logikę biznesową.
+* Przetwarzanie danych, walidacja oraz interakcja z warstwą danych (PostgreSQL) odbywają się **wyłącznie** wewnątrz izolowanych bloków warunkowych `if ($this->isPost())`. Próby przesłania parametrów w adresie URL (Query String) na endpointach operacyjnych są całkowicie ignorowane.
+
+### 7.3. Ograniczenie Długości Danych Wejściowych i Ochrona przed DoS
+Aplikacja posiada wielowarstwowe ograniczenia długości ciągów tekstowych wprowadzanych przez użytkownika, co zapobiega atakom typu *Buffer Overflow* oraz odmowie usługi (*Denial of Service*):
+* **Filtrowanie Backendowe:** W kontrolerze zdefiniowano sztywne limity: adres e-mail (max 255 znaków), nazwa użytkownika (max 50 znaków), hasło (max 72 znaki).
+* **Ochrona Procesora (Bcrypt Mitigation):** Ograniczenie hasła do 72 znaków jest kluczowym zabiegiem bezpieczeństwa – algorytm `PASSWORD_BCRYPT` domyślnie ignoruje znaki powyżej tej długości, a próba haszowania gigantycznych ciągów tekstowych (np. kilkumegabajtowych) mogłaby intencjonalnie doprowadzić do stuprocentowego przeciążenia procesora serwera (CPU exhaustion).
+* **Spójność z Bazą Danych:** Limity te są rygorystycznie odzwierciedlone w strukturze bazy danych PostgreSQL poprzez typy danych `VARCHAR(255)` oraz `VARCHAR(50)`, zamiast nielimitowanego typu `TEXT`.
+
+### 7.4. Bezpieczna Polityka Zarządzania Sesją (Session Management)
+W celu eliminacji podatności związanych z przechwytywaniem oraz fiksacją sesji (*Session Fixation*), zaimplementowano następujące procedury:
+* **Regeneracja ID:** Natychmiast po pomyślnym uwierzytelnieniu i zweryfikowaniu tożsamości kadeta, wywoływana jest funkcja `session_regenerate_id(true)`. Powoduje to zniszczenie starego identyfikatora sesji i wygenerowanie całkowicie nowego, uniemożliwiając napastnikowi przejęcie uprawnień za pomocą wcześniej podetkniętego identyfikatora.
+* **Czyszczenie Po-autentykacyjne:** Po zalogowaniu token CSRF z fazy logowania jest niszczony, aby wymusić wygenerowanie nowej puli kluczy dla sesji uwierzytelnionej.
+* **Rygorystyczny Destruktor (Logout):** Podczas wylogowywania aplikacja jawnie nadpisuje tablicę sesji pustą strukturą (`$_SESSION = []`), unieważnia i kasuje ciasteczko sesyjne w przeglądarce klienta poprzez ustawienie wstecznego czasu wygaśnięcia (Unix timestamp w przeszłości) oraz ostatecznie niszczy sesję na serwerze za pomocą `session_destroy()`.
+
+### 7.5. Silna Kryptografia i Walidacja Złożoności Autoryzacyjnej
+* **Haszowanie Haseł:** Hasła użytkowników nigdy nie są przechowywane w bazie danych w postaci jawnej. Do ich zabezpieczenia wykorzystano standard przemysłowy `password_hash()` z algorytmem `PASSWORD_BCRYPT`, zapewniający automatyczną implementację losowej soli (salt) dla każdego rekordu. Weryfikacja odbywa się poprzez bezpieczne czasowo porównanie `password_verify()`.
+* **Wymuszenie Silnych Haseł (Policy Enforcement):** Proces rejestracji odrzuca słabe hasła za pomocą walidacji wyrażeniem regularnym (Regex):
+  ```php
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+
+
+
+## 8. Testy
 
 
 
