@@ -59,38 +59,52 @@ class TrainingRepository extends Repository
 
     /**
      * Aktualizuje stan portfela i doświadczenia użytkownika w bazie oraz zapisuje zdarzenie w historii.
-     * Zastosowano bezpieczną transakcję (PDO Begintransaction), by uniknąć błędów niespójności danych.
+     * Zastosowano bezpieczną transakcję na poziomie izolacji REPEATABLE READ.
      */
     public function addTrainingRewards(int $userId, int $starDust, int $exp, int $levelId, int $score): void
     {
+        // Pobieramy jedno wspólne połączenie dla całej transakcji
         $db = $this->database->connect();
 
         try {
-            // Uruchamiamy transakcję SQL
+            // 1. Inicjalizacja transakcji w sterowniku PDO
             $db->beginTransaction();
 
-            // 1. Aktualizacja zasobów gracza
+            // 2. KRYTYCZNE DLA WYMAGAŃ: Wymuszenie poziomu izolacji w PostgreSQL
+            // Zapobiega anomalii niepowtarzalnego odczytu (Non-repeatable Read)
+            $db->exec("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+
+            // 3. KROK A: Aktualizacja zasobów gracza (używamy bindowania parametrów przed SQL Injection)
             $queryRewards = $db->prepare(
                 "UPDATE user_details 
-                 SET star_dust = star_dust + ?, 
-                     exp = exp + ? 
-                 WHERE user_id = ?;"
+                 SET star_dust = star_dust + :star_dust, 
+                     exp = exp + :exp 
+                 WHERE user_id = :user_id;"
             );
-            $queryRewards->execute([$starDust, $exp, $userId]);
+            $queryRewards->bindValue(':star_dust', $starDust, PDO::PARAM_INT);
+            $queryRewards->bindValue(':exp', $exp, PDO::PARAM_INT);
+            $queryRewards->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $queryRewards->execute();
 
-            // 2. Dodanie rekordu do nowej tabeli historii treningów
+            // 4. KROK B: Dodanie rekordu do tabeli historii treningów
             $queryHistory = $db->prepare(
                 "INSERT INTO training_history (user_id, level_id, score) 
-                 VALUES (?, ?, ?);"
+                 VALUES (:user_id, :level_id, :score);"
             );
-            $queryHistory->execute([$userId, $levelId, $score]);
+            $queryHistory->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $queryHistory->bindValue(':level_id', $levelId, PDO::PARAM_INT);
+            $queryHistory->bindValue(':score', $score, PDO::PARAM_INT);
+            $queryHistory->execute();
 
-            // Jeśli oba zapytania przeszły pomyślnie, zatwierdzamy zmiany w bazie
+            // 5. Jeśli oba kroki przeszły bez błędów atomowo zatwierdzamy zmiany
             $db->commit();
 
         } catch (Exception $e) {
-            // W razie jakiegokolwiek błędu wycofujemy wszystkie zmiany z tej sesji
-            $db->rollBack();
+            // W razie jakiegokolwiek błędu (np. utrata połączenia, błąd bazy),
+            // cofamy wszystkie operacje wykonane od momentu beginTransaction()
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
             throw $e;
         }
     }

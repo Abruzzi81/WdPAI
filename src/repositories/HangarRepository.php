@@ -4,7 +4,6 @@ require_once 'Repository.php';
 
 class HangarRepository extends Repository
 {
-
     // Pobiera wszystkie awatary i sprawdza, czy dany user_id je posiada
     public function getAllAvatars(int $userId): array
     {
@@ -31,10 +30,12 @@ class HangarRepository extends Repository
     {
         $query = $this->database->connect()->prepare(
             "UPDATE user_details 
-             SET current_avatar_id = ? 
-             WHERE user_id = ?;"
+             SET current_avatar_id = :avatar_id 
+             WHERE user_id = :user_id;"
         );
-        return $query->execute([$avatarId, $userId]);
+        $query->bindValue(':avatar_id', $avatarId, PDO::PARAM_INT);
+        $query->bindValue(':user_id', $userId, PDO::PARAM_INT);
+        return $query->execute();
     }
 
     public function purchaseAvatar(int $userId, int $avatarId): array
@@ -42,12 +43,16 @@ class HangarRepository extends Repository
         $db = $this->database->connect();
 
         try {
-            // Uruchamiamy transakcję SQL, aby mieć pewność, że jeśli coś się nie powiedzie, baza nie straci spójności
+            // 1. Uruchamiamy transakcję SQL
             $db->beginTransaction();
 
-            // 1. Pobieramy cenę awatara
-            $queryPrice = $db->prepare("SELECT price FROM avatars WHERE id = ?;");
-            $queryPrice->execute([$avatarId]);
+            // 2. KRYTYCZNE DLA WYMAGAŃ: Wymuszenie rygorystycznego poziomu izolacji (ochrona przed double-spending)
+            $db->exec("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
+
+            // 3. Pobieramy cenę awatara (Zoptymalizowany SELECT pod konkretną kolumnę)
+            $queryPrice = $db->prepare("SELECT price FROM avatars WHERE id = :avatar_id;");
+            $queryPrice->bindValue(':avatar_id', $avatarId, PDO::PARAM_INT);
+            $queryPrice->execute();
             $avatar = $queryPrice->fetch(PDO::FETCH_ASSOC);
 
             if (!$avatar) {
@@ -56,26 +61,32 @@ class HangarRepository extends Repository
 
             $price = (int) $avatar['price'];
 
-            // 2. Pobieramy aktualny stan portfela gracza
-            $queryUser = $db->prepare("SELECT star_dust FROM user_details WHERE user_id = ?;");
-            $queryUser->execute([$userId]);
+            // 4. Pobieramy aktualny stan portfela gracza (POPRAWKA: Usunięto SELECT *)
+            $queryUser = $db->prepare("SELECT star_dust FROM user_details WHERE user_id = :user_id;");
+            $queryUser->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $queryUser->execute();
             $userData = $queryUser->fetch(PDO::FETCH_ASSOC);
-            $currentDust = (int) $userData['star_dust'];
+            
+            $currentDust = $userData ? (int) $userData['star_dust'] : 0;
 
-            // 3. Weryfikacja finansowa
+            // 5. Weryfikacja finansowa
             if ($currentDust < $price) {
                 throw new Exception("Niewystarczająca ilość Gwiezdnego Pyłu! Wymagane: ✨ " . $price);
             }
 
-            // 4. Pobieramy opłatę (UPDATE)
-            $queryDeduct = $db->prepare("UPDATE user_details SET star_dust = star_dust - ? WHERE user_id = ?;");
-            $queryDeduct->execute([$price, $userId]);
+            // 6. Pobieramy opłatę (UPDATE)
+            $queryDeduct = $db->prepare("UPDATE user_details SET star_dust = star_dust - :price WHERE user_id = :user_id;");
+            $queryDeduct->bindValue(':price', $price, PDO::PARAM_INT);
+            $queryDeduct->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $queryDeduct->execute();
 
-            // 5. Dodajemy przedmiot do posiadanych (INSERT)
-            $queryUnlock = $db->prepare("INSERT INTO user_avatars (user_id, avatar_id) VALUES (?, ?);");
-            $queryUnlock->execute([$userId, $avatarId]);
+            // 7. Dodajemy przedmiot do posiadanych (INSERT)
+            $queryUnlock = $db->prepare("INSERT INTO user_avatars (user_id, avatar_id) VALUES (:user_id, :avatar_id);");
+            $queryUnlock->bindValue(':user_id', $userId, PDO::PARAM_INT);
+            $queryUnlock->bindValue(':avatar_id', $avatarId, PDO::PARAM_INT);
+            $queryUnlock->execute();
 
-            // Zatwierdzamy zmiany w bazie
+            // Zatwierdzamy zmiany atomowo w bazie danych
             $db->commit();
 
             return [
@@ -84,8 +95,10 @@ class HangarRepository extends Repository
             ];
 
         } catch (Exception $e) {
-            // W razie błędu wycofujemy wszystkie operacje z tej transakcji
-            $db->rollBack();
+            // W razie błędu bezpiecznie wycofujemy transakcję
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
             return [
                 'status' => 'error',
                 'message' => $e->getMessage()

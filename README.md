@@ -195,23 +195,34 @@ docker-compose down
 ```
 
 
-## 5. Baza Danych
+## 5. Baza Danych (Database Architecture)
 
+Logiczna i fizyczna struktura bazy danych została zaprojektowana w środowisku **PostgreSQL**. Architektura opiera się na paradygmacie pełnej spójności danych, eliminacji nadmiarowości oraz ścisłym przestrzeganiu reguł integralności referencyjnej. Wszystkie tabele zostały znormalizowane do poziomu **Trzeciej Postaci Normalnej (3NF)**.
 
+### 5.1. Schemat Relacyjny i Struktura Tabel
+W celu odwzorowania logiki biznesowej systemu, w bazie danych zaimplementowano trzy fundamentalne typy relacji, stosując optymalne typy danych (np. `INT` dla kluczy i liczników, `VARCHAR` o zdefiniowanych limitach dla ciągów tekstowych) oraz rygorystyczne akcje kaskadowe:
 
+* **Relacja Jeden-do-Jednego (1:1):** Połączenie tabeli `users` z tabelą `user_details`. Klucz główny `user_id` w tabeli `user_details` jest jednocześnie kluczem obcym wskazującym na `users(id)` z więzami `ON DELETE CASCADE`. Zapobiega to anomalii usunięcia – usunięcie konta kadeta automatycznie niszczy jego profil szczegółowy.
+* **Relacja Jeden-do-Wielu (1:N):** Powiązanie tabel słownikowych (np. `ranks` do `user_details` lub `avatars` do `user_details`) za pomocą kluczy obcych z restrykcją `ON DELETE SET NULL`, co gwarantuje, że usunięcie danej rangi lub awatara z systemu nie uszkodzi kont użytkowników, a jedynie zresetuje ich wskaźniki referencyjne.
+* **Relacja Wiele-do-Wielu (N:M):** Zaimplementowana za pomocą tabel pośredniczących, takich jak `user_missions` (łączącej `users` z `mission_levels`) oraz `training_history` (łączącej `users` z `training_levels`). Tabele te posiadają złożone klucze główne składające się z par kluczy obcych (`PRIMARY KEY (user_id, level_id)`), co całkowicie eliminuje redundancję danych i anomalie modyfikacji.
 
-TODO
+### 5.2. Widoki Bazodanowe (Database Views)
+W celu hermetyzacji złożonych zapytań łączących wiele tabel (*JOIN*) oraz optymalizacji warstwy sieciowej systemu, w bazie danych zdefiniowano dwa stałe widoki strukturalne:
 
+1.  **`v_cadet_profiles`:** Agreguje pełne dane profilowe kadeta poprzez złączenie tabel `users`, `user_details`, `ranks` oraz `avatars` przy użyciu instrukcji `LEFT JOIN`. Widok stosuje funkcję `COALESCE` do obsługi wartości opcjonalnych (NULL), zwracając bezpieczne wartości domyślne dla nowo zarejestrowanych kont. Warstwa backendowa PHP odpytuje bezpośrednio ten widok, co skraca czas parsowania zapytania przez SZBD.
+2.  **`v_cadet_activity_stats`:** Służy do celów analitycznych i paneli podsumowujących. Łączy dane o użytkownikach z historią ich zaangażowania w misje i treningi, wykorzystując funkcje agregujące `COUNT(DISTINCT ...)` oraz `SUM(...)` z klauzulą `GROUP BY`. Dostarcza skonsolidowane statystyki wydajności bez konieczności powtarzania kosztownych obliczeniowo operacji join-owania na poziomie kodu aplikacji.
 
+### 5.3. Procedury Składowane i Wyzwalacze (Functions & Triggers)
+W celu odciążenia serwera aplikacji (PHP) i wymuszenia automatycznej spójności danych na poziomie jądra bazy danych, wdrożono mechanizm wyzwalaczy zdarzeniowych:
 
+* **Funkcja Wyzwalacza (`fn_create_user_details_after_registration`):** Napisana w języku proceduralnym `PL/pgSQL`. Odpowiada za atomowe przygotowanie rekordu profilowego dla nowego użytkownika.
+* **Wyzwalacz (`tr_after_user_signup`):** Osadzony na tabeli `users` z regułą `AFTER INSERT FOR EACH ROW`. W momencie, gdy w aplikacji PHP następuje rejestracja (wstawienie rekordu do tabeli `users`), wyzwalacz automatycznie i asynchronicznie tworzy powiązany rekord w `user_details`, inicjalizując stan gwiezdnego pyłu (`star_dust`) oraz doświadczenia (`exp`) na wartość `0`. Eliminowane jest ryzyko powstania "osieroconego" użytkownika bez profilu detali.
 
+### 5.4. Poziomy Izolacji Transakcji (Transaction Concurrency Control)
+Operacje finansowe (zakup awatarów w Hangarze) oraz operacje modyfikacji postępu (przyznawanie nagród za misje i treningi) zostały zamknięte w ścisłych blokach transakcyjnych sterowanych z poziomu repozytoriów PHP PDO, z jawnym wymuszeniem zaawansowanego poziomu izolacji:
 
-
-
-
-
-
-
+```sql
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 
 ## 6. Interfejs i Wygląd (Design)
