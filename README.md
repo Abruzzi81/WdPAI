@@ -315,7 +315,6 @@ W celu eliminacji podatności związanych z przechwytywaniem oraz fiksacją sesj
 * **Wymuszenie Silnych Haseł (Policy Enforcement):** Proces rejestracji odrzuca słabe hasła za pomocą walidacji wyrażeniem regularnym (Regex):
   ```php
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
-```
 
 ### 7.6. Ochrona przed Cross-Site Scripting (XSS)
 W celu uniemożliwienia wstrzykiwania złośliwego kodu wykonywalnego (JavaScript/HTML) do kontekstu przeglądarki innych użytkowników, wdrożono dwustopniową strategię defensywną:
@@ -351,8 +350,31 @@ W celu optymalizacji zużycia zasobów systemowych (RAM, przepustowość sieciow
 
 
 
-## 8. Testy
+## 8. Testy Aplikacji i Zapewnienie Jakości (Testing Suite)
 
+W celu zapewnienia integralności kodu źródłowego, stabilności reguł biznesowych oraz odporności systemu na regresję, w projekcie zaimplementowano dedykowaną warstwę testów automatycznych. 
 
+Ze względu na specyfikę akademicką oraz dążenie do eliminacji nadmiarowych zależności zewnętrznych (brak wymogu instalacji managera Composer i zewnętrznych frameworków), testy zostały oparte na **natywnym mechanizmie asercji jądra języka PHP (`assert()`)**. Pokazuje to pełne zrozumienie mechaniki testowania oprogramowania u samych podstaw języka.
 
-TODO
+### 8.1. Architektura i Zakres Testów
+Wszystkie testy zostały skonsolidowane w zunifikowanym skrypcie testowym `tests/run_tests.php`. Zakres weryfikacji obejmuje kluczowe obszary architektury MVC oraz warstwy dostępu do danych (Repositories):
+
+#### Warstwa Walidacji i Bezpieczeństwa (Security / Controllers)
+* **Weryfikacja długości hasła:** Test sprawdza, czy zapora backendowa rygorystycznie odrzuca próby rejestracji lub logowania ciągami haseł dłuższymi niż 72 znaki. Chroni to procesor kontenera przed celowym przeciążeniem algorytmem haszującym Bcrypt (ochrona przed atakami typu DoS).
+* **Walidacja formatów sieciowych:** Test weryfikuje skuteczność filtra `FILTER_VALIDATE_EMAIL` w konfrontacji z syntaktycznie uszkodzonymi adresami e-mail, gwarantując odcięcie niepoprawnych żądań przed interakcją z bazą danych.
+* **Polityka złożoności haseł:** Dwa niezależne testy badają zachowanie wyrażenia regularnego (Regex) odpowiedzialnego za wymuszanie silnych haseł. Sprawdzane jest zarówno poprawne odrzucenie haseł zbyt prostych, jak i prawidłowa autoryzacja haseł spełniających kryteria bezpieczeństwa.
+* **Autoryzacja statusów specyficznych:** Test symuluje próbę uwierzytelnienia konta posiadającego flagę `banned` i upewnia się, że system natychmiast zablokuje dostęp do panelu dowodzenia.
+
+#### Warstwa Logiki Biznesowej (Data Integrity / Repositories)
+* **Integralność finansowa portfela (Hangar):** Test emuluje zachowanie metody `purchaseAvatar` pod kontrolą transakcyjnego poziomu izolacji `REPEATABLE READ`. Weryfikuje, czy próba zakupu przedmiotu przy niewystarczającym stanie gwiezdnego pyłu skutkuje przerwaniem operacji.
+* **Kontrola duplikatów (Misje):** Test weryfikuje poprawność algorytmu obsługi postępów na mapie misji. Emuluje działanie klauzuli SQL `ON CONFLICT (user_id, level_id) DO NOTHING`, upewniając się, że ponowne wysłanie żądania ukończenia tej samej misji zostanie bezpiecznie zignorowane, chroniąc bazę danych przed błędami naruszenia unikalności klucza.
+
+### 8.2. Instrukcja Uruchomienia Testów w Środowisku Docker
+Ponieważ cała aplikacja jest w pełni konteneryzowana, interpreter PHP oraz zasoby systemu nie są uruchamiane bezpośrednio na maszynie gospodarza (Host/Windows), lecz wewnątrz odizolowanego środowiska. 
+
+Testy należy uruchamiać, odwołując się bezpośrednio do kontenera usługi interpretera, który w pliku `docker-compose.yml` nosi nazwę `php`.
+
+#### Sposób 1: Uruchomienie bezpośrednie (Jedna komenda w terminalu Hosta)
+Będąc w głównym katalogu projektu na maszynie lokalnej, wykonaj poniższe polecenie w terminalu (np. PowerShell / Bash):
+```bash
+docker-compose exec php php /app/tests/run_tests.php
