@@ -315,6 +315,7 @@ W celu eliminacji podatności związanych z przechwytywaniem oraz fiksacją sesj
 * **Wymuszenie Silnych Haseł (Policy Enforcement):** Proces rejestracji odrzuca słabe hasła za pomocą walidacji wyrażeniem regularnym (Regex):
   ```php
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
+```
 
 ### 7.6. Ochrona przed Cross-Site Scripting (XSS)
 W celu uniemożliwienia wstrzykiwania złośliwego kodu wykonywalnego (JavaScript/HTML) do kontekstu przeglądarki innych użytkowników, wdrożono dwustopniową strategię defensywną:
