@@ -225,6 +225,99 @@ Operacje finansowe (zakup awatarów w Hangarze) oraz operacje modyfikacji postę
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 ```
 
+### 5.5. Diagram Związków Encji (ERD - Entity Relationship Diagram)
+
+Poniższy schemat logiczny przedstawia architekturę powiązań referencyjnych wdrożonych w systemie PostgreSQL. Architektura ta eliminuje redundancję oraz zabezpiecza system przed anomaliami usunięcia (*ON DELETE CASCADE / SET NULL*).
+
+```mermaid
+erDiagram
+    users {
+        integer id PK
+        varchar_50 username
+        varchar_255 email
+        text password
+        timestamp created_at
+        timestamp updated_at
+        varchar_10 role
+        varchar_15 status
+    }
+
+    user_details {
+        integer user_id PK, FK
+        integer star_dust
+        integer rank_id FK
+        integer exp
+        integer current_avatar_id FK
+    }
+
+    ranks {
+        integer id PK
+        varchar_50 name
+        integer min_exp
+    }
+
+    avatars {
+        integer id PK
+        varchar_100 name
+        integer price
+        varchar_100 image_filename
+    }
+
+    user_avatars {
+        integer user_id FK
+        integer avatar_id FK
+    }
+
+    mission_levels {
+        integer id PK
+        varchar_50 name
+        varchar_20 difficulty
+        integer min_number
+        integer max_number
+        integer sequence_order
+        integer reward
+        integer exp_reward
+    }
+
+    user_missions {
+        integer user_id FK
+        integer level_id FK
+        timestamp completed_at
+    }
+
+    training_levels {
+        integer id PK
+        varchar_20 name
+        integer multiplier
+        varchar_255 description
+        integer min_number
+        integer max_number
+    }
+
+    training_history {
+        integer id PK
+        integer user_id FK
+        integer level_id FK
+        integer score
+        timestamp completed_at
+    }
+
+    %% Definicje relacji na podstawie mapowania kluczy obcych
+    users ||--|| user_details : "1:1 (user_id)"
+    ranks ||--o{ user_details : "1:N (rank_id)"
+    avatars ||--o{ user_details : "1:N (current_avatar_id)"
+    
+    users ||--o{ user_avatars : "1:N (user_id)"
+    avatars ||--o{ user_avatars : "1:N (avatar_id)"
+    
+    users ||--o{ user_missions : "1:N (user_id)"
+    mission_levels ||--o{ user_missions : "1:N (level_id)"
+    
+    users ||--o{ training_history : "1:N (user_id)"
+    training_levels ||--o{ training_history : "1:N (level_id)"
+```
+
+
 ## 6. Interfejs i Wygląd (Design)
 
 Warstwa prezentacji aplikacji **Galactic Math Explorer** została zaprojektowana od zera w estetyce *Dark Mode UI*, nawiązującej bezpośrednio do motywów science-fiction. Projekt graficzny stawia na wysoki kontrast, czytelną typografię oraz intuicyjne rozmieszczenie elementów kontrolnych, co optymalizuje doświadczenia użytkownika (User Experience - UX) zarówno podczas procesów dydaktycznych, jak i operacji administracyjnych.
