@@ -23,7 +23,7 @@ class UsersRepository extends Repository
         $query->execute();
 
         $users = $query->fetchAll(PDO::FETCH_ASSOC);
-        return $users ? $users : [];
+        return $users ?: [];
     }
 
     public function updateUserStatus(int $userId, string $status): void

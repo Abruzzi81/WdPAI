@@ -321,6 +321,24 @@ W celu minimalizacji ryzyka eskalacji potencjalnych ataków typu Cross-Site Scri
 * Kluczowa flaga `'httponly' => true` nakazuje przeglądarce klienta zablokowanie dostępu do tokenu `PHPSESSID` z poziomu API języka JavaScript (np. poprzez właściwość `document.cookie`). Uniemożliwia to złośliwym skryptom odczytanie i eksfiltrację klucza uwierzytelniającego na zewnętrzne serwery napastnika.
 * Dodatkowo atrybut `'samesite' => 'Strict'` ogranicza przesyłanie ciasteczka w żądaniach międzywitrynowych, wzmacniając ochronę przed atakami typu CSRF.
 
+### 7.9. Rejestr Audytowy Nieudanych Prób Logowania (Security Logging)
+W celu wczesnego wykrywania zautomatyzowanych ataków słownikowych oraz prób siłowego łamania zabezpieczeń (Brute Force), w systemie zaimplementowano asynchroniczny podsystem logowania zdarzeń bezpieczeństwa:
+* **Izolacja Wrażliwych Danych:** Zgodnie z najlepszymi praktykami bezpieczeństwa, system rygorystycznie **nie zapisuje haseł** wprowadzanych podczas nieudanych prób. Chroni to przed przypadkowym wyciekiem poufnych danych strukturalnych w przypadku literówek użytkowników.
+* **Struktura Wpisu Audytowego:** Każdy wpis w rejestrze `security.log` jest trwale znakowany czasem (dokładny timestamp), adresem IP napastnika pobieranym z `$_SERVER['REMOTE_ADDR']` oraz adresem e-mail, na który próbowano się autoryzować.
+* **Trwałość Rejestru:** Zapis realizowany jest za pomocą operacji atomowej `file_put_contents` z flagą `FILE_APPEND`, co uniemożliwia nadpisanie historycznych danych audytowych i pozwala na ich późniejszą analizę przez systemy typu SIEM lub administratora floty.
+
+### 7.10. Serwerowa Walidacja Formatów Danych (Server-Side Email Validation)
+Niezależnie od walidacji semantycznej wbudowanej w formularze HTML5 (`type="email"`), system implementuje twardą weryfikację strukturalną po stronie backendu:
+* Zarówno w procesie uwierzytelniania, jak i tworzenia nowego konta, adres e-mail jest poddawany testowi za pomocą natywnego filtra komponentu PHP `filter_var($email, FILTER_VALIDATE_EMAIL)`.
+* Mechanizm ten chroni silnik bazy danych przed próbami rejestracji przy użyciu losowych ciągów znaków niespełniających specyfikacji standardu RFC 5322, co całkowicie odcina ataki automatyczne (boty) obchodzące zabezpieczenia warstwy frontendu.
+
+### 7.11. Minimalizacja Pobierania Danych (Data Minimization / Query Optimization)
+W celu optymalizacji zużycia zasobów systemowych (RAM, przepustowość sieciowa wewnątrz architektury kontenerowej Docker) oraz podniesienia ogólnego poziomu bezpieczeństwa informacji, w warstwie dostępu do danych wdrożono zasadę ograniczonego zaufania:
+* **Eliminacja SELECT \***: W metodach uwierzytelniających (`getUserByEmail`) zrezygnowano z nielimitowanych zapytań o pełną strukturę rekordu. Zapytania SQL jawnie definiują wyłącznie minimalny zestaw atrybutów (`id`, `email`, `password`, `username`, `status`) niezbędny do poprawnego przejścia procedury weryfikacyjnej.
+* **Ograniczenie Ekspozycji Wrażliwych Informacji:** Odcięcie nadmiarowych kolumn na etapie zapytania chroni architekturę przed przypadkowym wyciekiem danych niejawnych do warstwy prezentacji lub sesji i gwarantuje, że cykl życia obiektu użytkownika w pamięci podręcznej PHP jest zredukowany do operacyjnego minimum.
+
+
+
 ## 8. Testy
 
 
