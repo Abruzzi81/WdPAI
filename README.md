@@ -223,7 +223,7 @@ Operacje finansowe (zakup awatarów w Hangarze) oraz operacje modyfikacji postę
 
 ```sql
 SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
-
+```
 
 ## 6. Interfejs i Wygląd (Design)
 
