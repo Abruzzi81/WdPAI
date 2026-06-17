@@ -9,9 +9,6 @@ class SecurityController extends AppController
 
     public function login()
     {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
 
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -98,7 +95,7 @@ class SecurityController extends AppController
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
             $password2 = $_POST['password2'] ?? '';
-            $username = $_POST['username'] ?? '';
+            $username = strip_tags(trim($_POST['username'] ?? ''));
 
             if (strlen($email) > 255 || strlen($username) > 50 || strlen($password) > 72) {
                 return $this->render('register', [

@@ -305,7 +305,21 @@ W celu eliminacji podatności związanych z przechwytywaniem oraz fiksacją sesj
   ```php
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/
 
+### 7.6. Ochrona przed Cross-Site Scripting (XSS)
+W celu uniemożliwienia wstrzykiwania złośliwego kodu wykonywalnego (JavaScript/HTML) do kontekstu przeglądarki innych użytkowników, wdrożono dwustopniową strategię defensywną:
+* **Sanitizacja na wejściu (Input Sanitization):** Podczas procesu rejestracji pole `username` jest filtrowane za pomocą funkcji `strip_tags()`. Eliminuje to wszelkie znaczniki HTML i skrypty zanim trafią one do trwałego magazynu danych (PostgreSQL).
+* **Neutralizacja na wyjściu (Output Escaping):** Wszystkie dynamiczne dane renderowane w plikach widoków, pochodzące z sesji lub bazy danych (np. `htmlspecialchars($loggedPlayer['username'])`), są rygorystycznie mapowane przy użyciu funkcji `htmlspecialchars()` z flagą `ENT_QUOTES`. Zamienia to znaki specjalne (takie jak `<`, `>`, `&`, `"`, `'`) na ich bezpieczne encje HTML, uniemożliwiając ich interpretację przez silnik przeglądarki jako kodu źródłowego.
 
+### 7.7. Ochrona przed SQL Injection (Parametryzacja PDO)
+Interakcja z relacyjną bazą danych PostgreSQL została w pełni odizolowana za pomocą warstwy abstrakcji danych PDO (PHP Data Objects). 
+* **Eliminacja konkatenacji:** W żadnym miejscu w klasach repozytoriów (`Repositories`) nie stosuje się łączenia ciągów znaków (konkatenacji) w celu budowania zapytań SQL z udziałem zmiennych dostarczonych przez użytkownika.
+* **Prepared Statements:** Wszystkie zapytania są kompilowane wstępnie przy użyciu mechanizmu `prepare()`. Zmienne są mapowane jako bezpieczne tokeny referencyjne za pomocą jawnego bindowania typów statycznych (`bindParam('placeholder', $value, PDO::PARAM_STR)`). Silnik bazy danych traktuje te dane wyłącznie jako literały, uniemożliwiając zmianę struktury logicznej drzewa wykonawczego zapytania.
+
+### 7.8. Zabezpieczenie Ciasteczek Sesyjnych (Flaga HttpOnly)
+W celu minimalizacji ryzyka eskalacji potencjalnych ataków typu Cross-Site Scripting (XSS) i ochrony przed kradzieżą tożsamości cyfrowej (Session Hijacking), wdrożono rygorystyczną politykę dystrybucji ciasteczek:
+* Przed inicjalizacją sesji za pomocą `session_start()`, parametry strukturalne identyfikatora sesji są rekonfigurowane proceduralnie przez `session_set_cookie_params()`.
+* Kluczowa flaga `'httponly' => true` nakazuje przeglądarce klienta zablokowanie dostępu do tokenu `PHPSESSID` z poziomu API języka JavaScript (np. poprzez właściwość `document.cookie`). Uniemożliwia to złośliwym skryptom odczytanie i eksfiltrację klucza uwierzytelniającego na zewnętrzne serwery napastnika.
+* Dodatkowo atrybut `'samesite' => 'Strict'` ogranicza przesyłanie ciasteczka w żądaniach międzywitrynowych, wzmacniając ochronę przed atakami typu CSRF.
 
 ## 8. Testy
 
